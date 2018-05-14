@@ -1,0 +1,10 @@
+[core]
+	bare = true
+	repositoryformatversion = 0
+	filemode = false
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = git@repo.ufutx.net:ufutx.scraper.admin
+	fetch = +refs/heads/*:refs/remotes/origin/*
+	puttykeyfile = D:\\key\\kobe.ppk

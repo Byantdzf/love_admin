@@ -95,7 +95,7 @@ export const appRouter = [
     },
     {
         path: '/posts',
-        icon: 'ios-paper',
+        icon: 'ios-book',
         title: '文章',
         name: 'posts',
         component: Main,
@@ -105,7 +105,7 @@ export const appRouter = [
     },
     {
         path: '/profiles',
-        icon: 'ios-paper',
+        icon: 'ios-chatboxes',
         title: '公众号',
         name: 'profiles',
         component: Main,
@@ -115,7 +115,7 @@ export const appRouter = [
     },
     {
         path: '/categories',
-        icon: 'ios-paper',
+        icon: 'pricetags',
         title: 'categories',
         name: 'categories',
         component: Main,

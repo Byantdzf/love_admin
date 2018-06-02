@@ -10,7 +10,7 @@
                 <span @click="handleSearch" >
                     <Button type="primary" icon="search" style=" margin-bottom: 22px;">创建</Button>
                 </span>
-                <Table :columns="orgColumns" :data="orgData" style="width: 100%;padding-top: 22px;" border></Table>
+                <Table :columns="orgColumns" :data="orgData" style="width: 100%;" border></Table>
                 <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
             </TabPane>
@@ -72,7 +72,7 @@
                         align: 'center',
                         render: (h, params) => {
                             if (parseInt(params.row.is_approval) === 1) {
-                               
+
                             } else {
                             	return h('div', [
                                     h('Button', {
@@ -156,7 +156,7 @@
             	console.log(this.value)
                 let self = this
                 let data = {
-                	title: this.value	
+                	title: this.value
                 }
                 uAxios.put('article/categories/' + self.id, data).then((response) => {
 	                if (response.data.code === 0) {
@@ -180,7 +180,7 @@
                 // 分页
 //              self.currentPage = num;
                 this.getlist(num);
-                       
+
             },
             getlist (page) {
             	let self = this;
@@ -190,7 +190,7 @@
                         self.orgData = result.data
                         self.orgTotal = result.total;
                         self.searchKeyword = ''
-                        
+
                     });
             },
             handleSearch () {
@@ -201,7 +201,7 @@
                     .then(res => {
                         let result = res.data.data;
                         this.getlist('1')
-                        
+
                     });
             }
         },

@@ -60,37 +60,67 @@ export const otherRouter = {
 
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
 export const appRouter = [
-//  {
-//      path: '/group',
-//      icon: 'ios-folder',
-//      name: 'group',
-//      title: 'Group',
-//      component: Main,
-//      children: [
-//          {
-//              path: 'page1',
-//              icon: 'ios-paper-outline',
-//              name: 'page1',
-//              title: 'Page1',
-//              component: resolve => { require(['@/views/group/page1/page1.vue'], resolve); }
-//          },
-//          {
-//              path: 'page2',
-//              icon: 'ios-list-outline',
-//              name: 'page2',
-//              title: 'Page2',
-//              component: resolve => { require(['@/views/group/page2/page2.vue'], resolve); }
-//          }
-//      ]
-//  },
+     // {
+     //     path: '/group',
+     //     icon: 'ios-folder',
+     //     name: 'group',
+     //     title: 'Group',
+     //     component: Main,
+     //     children: [
+     //         {
+     //             path: 'page1',
+     //             icon: 'ios-paper-outline',
+     //             name: 'page1',
+     //             title: 'Page1',
+     //             component: resolve => { require(['@/views/group/page1/page1.vue'], resolve); }
+     //         },
+     //         {
+     //             path: 'page2',
+     //             icon: 'ios-list-outline',
+     //             name: 'page2',
+     //             title: 'Page2',
+     //             component: resolve => { require(['@/views/group/page2/page2.vue'], resolve); }
+     //         }
+     //     ]
+     // },
     {
-        path: '/page',
+        path: '/list',
         icon: 'ios-paper',
-        title: '创建栏目',
+        title: '栏目列表',
         name: 'index',
         component: Main,
         children: [
-            { path: 'index', title: '创建栏目', name: '创建栏目', component: resolve => { require(['@/views/page/index.vue'], resolve); } }
+            { path: 'index', title: '栏目列表', name: '栏目列表', component: resolve => { require(['@/views/page/index.vue'], resolve); } }
+        ]
+    },
+    {
+        path: '/posts',
+        icon: 'ios-paper',
+        title: '文章',
+        name: 'posts',
+        component: Main,
+        children: [
+            { path: 'index', title: '文章', name: '文章', component: resolve => { require(['@/views/page/posts.vue'], resolve); } }
+        ]
+    },
+    {
+        path: '/profiles',
+        icon: 'ios-paper',
+        title: '公众号',
+        name: 'profiles',
+        component: Main,
+        children: [
+            { path: 'index', title: '公众号', name: '公众号', component: resolve => { require(['@/views/page/profiles.vue'], resolve); } }
+        ]
+    },
+    {
+        path: '/categories',
+        icon: 'ios-paper',
+        title: 'categories',
+        name: 'categories',
+        component: Main,
+        children: [
+            { path: 'index', title: '标签', name: '标签', component: resolve => { require(['@/views/page/categories.vue'], resolve); } }
         ]
     }
 ];

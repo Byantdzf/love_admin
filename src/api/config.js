@@ -1,7 +1,7 @@
 import QS from 'qs';
 
 export default {
-    baseURL: 'http://ufutx.scraper/api/',
+    baseURL: 'http://scraper.hankin.com/api/',
     method: 'GET',
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

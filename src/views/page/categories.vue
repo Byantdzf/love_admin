@@ -4,16 +4,16 @@
             <TabPane label="文章标签" name="org">
                 <Input
                         v-model="searchKeyword"
-                        @on-enter="handleSearch"
+                        @on-enter="createLabel"
                         placeholder="创建标签..."
                         style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
+                <span @click="createLabel" >
                     <Button type="primary" icon="search" style=" margin-bottom: 22px;">创建</Button>
                 </span>
                 <Card style="margin-bottom: 32px">
                     <p slot="title">
                         <Icon type="ionic"></Icon>
-                        点击标签搜索
+                        点击标签筛选
                     </p>
                     <CheckboxGroup v-model="social" v-for="(item,index) in labels" @on-change="filterLabel">
                         <Checkbox :label="item._id">
@@ -111,7 +111,7 @@
                     },
                     {
                         title: '点赞数',
-                        key: 'linkNum',
+                        key: 'likeNum',
                         align: 'center'
                     },
                     {
@@ -182,16 +182,37 @@
             }
         },
         methods: {
-            filterLabel () {
+            // 创建标签
+            createLabel () {
+                let self = this
+                console.log(this.searchKeyword);
+                let data = {
+                    title: this.searchKeyword
+                }
+                uAxios.post('labels', data)
+                    .then(res => {
+                        uAxios.get('labels')
+                        .then(res => {
+                            let result = res.data.data;
+                            self.labels = result.data;
+                            self.labels.forEach((item, index, arr) => {
+                                arr[index].active = false;
+                            })
+                        });
+                    });
+            },
+            filterLabel (page) {
               console.log(this.social)
                 let self = this
                 let data = {
                     label_ids: this.social
                 }
-                uAxios.post('labels/posts', data)
+                uAxios.post('labels/posts?page=' + page, data)
                     .then(res => {
                         let result = res.data.data;
-                        self.orgData = result.data
+                        self.orgData = result.data.map((item)=>{
+                            return item.post
+                        })
                         console.log(self.orgData)
                         self.orgTotal = result.total;
                         self.searchKeyword = ''
@@ -241,22 +262,27 @@
             handlePage (num) {
                 // 分页
 //              self.currentPage = num;
-                this.getlist(num);
+                if (this.social.length == 0) {
+                    this.getlist(num);
+                } else {
+                    this.filterLabel(num);
+                }
 
             },
             getlist (page) {
                 let self = this;
                 self.loading = true
-                uAxios.get('posts?page=' + page)
+                uAxios.get('labels/posts/v2?page=' + page)
                     .then(res => {
                         let result = res.data.data;
-                        self.orgData = result.data
+                        self.orgData = result.data.map((item)=>{
+                            return item.post
+                        })
                         console.log(self.orgData)
                         self.orgTotal = result.total
-                        self.searchKeyword = ''
                         self.loading = false
                     });
-                uAxios.get('labels?page=' + page)
+                uAxios.get('labels')
                     .then(res => {
                         let result = res.data.data;
                         self.labels = result.data;
@@ -281,7 +307,7 @@
             }
         },
         mounted () {
-            this.getlist()
+            this.getlist(1)
 //          this.getOrgData(1, '');
 //          this.$store.commit('updateMenulist');
         }

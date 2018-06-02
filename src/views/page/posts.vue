@@ -148,7 +148,7 @@
                     },
                     {
                         title: '点赞数',
-                        key: 'linkNum',
+                        key: 'likeNum',
                         align: 'center'
                     },
                     {
@@ -286,18 +286,14 @@
                     alert('请先勾选需要标记的文章！');
                 } else {
                     let data = {
-                        titles: this.social,
+                        label_ids: this.social,
                         post_ids: this.post_ids
                     }
                     console.log(data)
                     uAxios.post('posts/labels', data).then((response) => {
                         if (response.data.code === 0) {
-                            debugger
-    //	                	this.$Modal.error({
-    //	                        content: '删除成功'
-    //	                    });
-                            this.$Message.info('修改成功');
-                            this.getlist()
+                            this.$Message.info('标记成功');
+                            this.getlist(1)
                         } else {
                             this.$Modal.error({
                                 content: response.data.message
@@ -324,23 +320,21 @@
             	        page: page,
                         msgBiz: self.msgBiz
                     }
-                    uAxios.get('posts?page=' + page + '&msgBiz=' + self.msgBiz)
+                    uAxios.get('posts?page=' + page + '&msgBiz=' + self.msgBiz +'&keyword=' + this.searchKeyword)
                         .then(res => {
                             let result = res.data.data;
                             self.orgData = result.data
                             console.log(self.orgData)
                             self.orgTotal = result.total
-                            self.searchKeyword = ''
                             self.loading = false
                         });
                 } else {
-                    uAxios.get('posts?page=' + page)
+                    uAxios.get('posts?page=' + page +'&keyword=' + this.searchKeyword)
                         .then(res => {
                             let result = res.data.data;
                             self.orgData = result.data
                             console.log(self.orgData)
                             self.orgTotal = result.total
-                            self.searchKeyword = ''
                             self.loading = false
                         });
                 }

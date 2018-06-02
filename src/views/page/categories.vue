@@ -120,11 +120,11 @@
                         align: 'center',
                         sortable: true
                     },
-                    {
-                        title: '时间间隔',
-                        key: 'time',
-                        align: 'center'
-                    },
+                    // {
+                    //     title: '时间间隔',
+                    //     key: 'time',
+                    //     align: 'center'
+                    // },
                     {
                         title: '公众号头像',
                         key: 'profile_title',
@@ -144,6 +144,71 @@
                             ]);
                         },
                         align: 'center'
+                    },
+                    {
+                        title: '操作',
+                        key: 'title',
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.postlabels_move(params.row.move_id,'up')
+                                        }
+                                    }
+                                }, '上移'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.postlabels_move(params.row.move_id,'down')
+                                        }
+                                    }
+                                }, '下移'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.postlabels_move(params.row.move_id,'start')
+                                        }
+                                    }
+                                }, '置顶'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.postlabels_move(params.row.move_id,'end')
+                                        }
+                                    }
+                                }, '置底')
+                            ]);
+                        }
                     }
                 ],
                 modal: false,
@@ -183,6 +248,18 @@
         },
         methods: {
             // 创建标签
+            postlabels_move (_id, type) {
+                uAxios.post('postlabels/' + _id + '/move/' + type)
+                    .then(res => {
+                        console.log(res.data.code)
+                        if(res.data.code == 0){
+                            this.$Message.info('操作成功');
+                            this.getlist(1)
+                        }else{
+                            this.$Message.error(res.message);
+                        }
+                    });
+            },
             createLabel () {
                 let self = this
                 console.log(this.searchKeyword);
@@ -276,7 +353,20 @@
                     .then(res => {
                         let result = res.data.data;
                         self.orgData = result.data.map((item)=>{
-                            return item.post
+                           return {
+                               move_id: item._id,
+                               link:  item.post.link,
+                               profile: item.post.profile,
+                               msgBiz: item.post.msgBiz,
+                               createdAt: item.post.createdAt,
+                               digest: item.post.digest,
+                               publishAt: item.post.publishAt,
+                               updatedAt: item.post.updatedAt,
+                               _id: item.post._id,
+                               likeNum: item.post.likeNum,
+                               readNum: item.post.readNum,
+                               title: item.post.title
+                            }
                         })
                         console.log(self.orgData)
                         self.orgTotal = result.total

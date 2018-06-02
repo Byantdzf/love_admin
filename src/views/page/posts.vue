@@ -22,9 +22,10 @@
                         placeholder="关键字搜索..."
                         style="width: 200px; margin-bottom: 22px;"/>
                 <span @click="handleSearch" >
-                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">创建</Button>
+                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
                 </span>
-                <Table :columns="orgColumns" :data="orgData" style="width: 100%;" border></Table>
+                <Button @click="handleSelectAll()" style="float: right" icon="checkmark-round">批量打标签</Button>
+                <Table :loading="loading" :columns="orgColumns" :data="orgData" style="width: 100%;" border  @on-selection-change="selectionchange"></Table>
                 <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
             </TabPane>
@@ -35,9 +36,10 @@
                         placeholder="关键字搜索..."
                         style="width: 200px; margin-bottom: 22px;"/>
                 <span @click="handleSearch" >
-                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">创建</Button>
+                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
                 </span>
-                <Table :columns="orgColumns" :data="orgData" style="width: 100%;" border></Table>
+                <Button @click="handleSelectAll()" style="float: right" icon="checkmark-round">批量打标签</Button>
+                <Table :loading="loading" :columns="orgColumns" :data="orgData" style="width: 100%;" border  @on-selection-change="selectionchange"></Table>
                 <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
             </TabPane>
@@ -73,7 +75,7 @@
         name: 'index',
         data () {
             return {
-                activeTab: 'haveRead',
+                activeTab: 'allRead',
                 currentTab: 'org',
                 currentPage: 1,
                 searchKeyword: '',
@@ -127,9 +129,8 @@
                                  }),
                                  h('strong', {
                                      style: {
-                                         margin: '5px',
+                                         margin: '12px',
                                          fontSize: '14px'
-                                         // color: '#253fd3'
                                      },
                                      on: {
                                          click: () => {
@@ -157,11 +158,11 @@
                         align: 'center',
                         sortable: true
                     },
-                    {
-                        title: '时间间隔',
-                        key: 'time',
-                        align: 'center'
-                    },
+                    // {
+                    //     title: '时间间隔',
+                    //     key: 'time',
+                    //     align: 'center'
+                    // },
                     {
                         title: '公众号头像',
                         key: 'profile_title',
@@ -245,16 +246,14 @@
                 show: false,
                 brokerLecturerData: [],
                 post_ids: [],
-                msgBiz: ''
+                msgBiz: '',
+                type: ''
 
             };
         },
         methods: {
             labelsActive (item) {
                 console.log(this.single);
-            },
-            aaa(e){
-              console.log(e)
             },
             selectionchange(e){
                 this.post_ids = []
@@ -305,6 +304,7 @@
             getTab (type) {
                 // 获得激活的Tab页
                 this.activeTab = type;
+                this.getlist(1)
             },
             handlePage (num) {
                 // 分页
@@ -315,12 +315,22 @@
             getlist (page) {
             	let self = this
             	self.loading = true
+                let read = ''
+                let query = ''
+                if(this.activeTab == 'haveRead'){
+                    read = '&is_read=1'
+                }else if(this.activeTab == 'noneRead'){
+                    read = '&is_read=0'
+                }
+                if (this.searchKeyword) {
+                    query = '&keyword=' + this.searchKeyword;
+                }
                 if(self.msgBiz) {
             	    let data = {
             	        page: page,
                         msgBiz: self.msgBiz
                     }
-                    uAxios.get('posts?page=' + page + '&msgBiz=' + self.msgBiz +'&keyword=' + this.searchKeyword)
+                    uAxios.get('posts?page=' + page + '&msgBiz=' + self.msgBiz + query + read)
                         .then(res => {
                             let result = res.data.data;
                             self.orgData = result.data
@@ -329,7 +339,7 @@
                             self.loading = false
                         });
                 } else {
-                    uAxios.get('posts?page=' + page +'&keyword=' + this.searchKeyword)
+                    uAxios.get('posts?page=' + page + query +read)
                         .then(res => {
                             let result = res.data.data;
                             self.orgData = result.data
@@ -349,10 +359,16 @@
                     });
             },
             handleSearch () {
+                let read = ''
+                if(this.activeTab == 'haveRead'){
+                    read = '&is_read=1'
+                }else if(this.activeTab == 'noneRead'){
+                    read = '&is_read=0'
+                }
             	let query = '&keyword=' + this.searchKeyword;
             	let self = this;
             	let page = 1;
-                uAxios.get('posts?page=' + page + query)
+                uAxios.get('posts?page=' + page + query + read)
                     .then(res => {
                         let result = res.data.data;
                         self.orgData = result.data

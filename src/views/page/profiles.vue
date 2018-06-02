@@ -126,32 +126,32 @@
                     },
                     {
                         title: '最近',
-                        key: 'newestPostTime',
+                        key: 'new_createAt',
                         align: 'center',
                         editable: true
                     },
                     {
                         title: '最旧',
-                        key: 'oldestPostTime',
+                        key: 'last_createAt',
                         align: 'center',
                         editable: true
                     },
                     {
                         title: '文章数',
-                        key: 'postsAllCount',
+                        key: 'post_count',
                         align: 'center',
                         editable: true
                     },
                     {
                         title: '有数据',
-                        key: 'postsHasDataCount',
+                        key: 'read_post_count',
                         align: 'center',
                         editable: true
                     },
 
                     {
                         title: '差',
-                        key: 'title',
+                        key: 'cha_post_count',
                         align: 'center',
                         editable: true
                     },

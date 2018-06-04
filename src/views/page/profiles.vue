@@ -11,7 +11,7 @@
                     <span @click="handleSearch" >
                     <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
                 </span>
-                    <Table :loading="loading" :columns="orgColumns" :data="orgData" style="width: 100%;" border @on-row-click="aaa"></Table>
+                    <Table :loading="loading" :columns="orgColumns" :data="orgData" style="width: 100%;" border></Table>
                     <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                           style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
@@ -46,7 +46,7 @@
 	        title="温馨提示"
 	        @on-ok="ok"
 	        >
-	        <p>是否确定删除该栏目？</p>
+	        <p>是否确定删除该公众号？</p>
 	    </Modal>
 	    <Modal
         	v-model="modal"
@@ -122,7 +122,22 @@
                         title: '公众号',
                         key: 'title',
                         align: 'center',
-                        editable: true
+                        width: 250,
+                        render: (h, params) => {
+                            return h('div', [
+                                h('strong', {
+                                    style: {
+                                        margin: '12px',
+                                        fontSize: '14px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$router.push('/posts/index?msgBiz=' + params.row.msgBiz)
+                                        }
+                                    }
+                                }, params.row.title)
+                            ]);
+                        }
                     },
                     {
                         title: '最近',
@@ -162,27 +177,45 @@
                         align: 'center',
                         editable: true
                     },
-                    // {
-                    //     title: 'Action',
-                    //     key: 'action',
-                    //     width: 150,
-                    //     align: 'center',
-                    //     render: (h, params) => {
-                    //         return h('div', [
-                    //             h('Button', {
-                    //                 props: {
-                    //                     type: 'error',
-                    //                     size: 'small'
-                    //                 },
-                    //                 on: {
-                    //                     click: () => {
-                    //                         this.remove(params.index)
-                    //                     }
-                    //                 }
-                    //             }, 'Delete')
-                    //         ]);
-                    //     }
-                    // }
+                    {
+                        title: '操作',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '10px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.modal1 = true
+                                            this.id = params.row._id
+                                            this.msgBiz = params.row.msgBiz
+                                        }
+                                    }
+                                }, '删除'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.modal = true
+                                            this.id = params.row._id
+                                            this.value = params.row.title
+                                        }
+                                    }
+                                }, '编辑')
+                            ]);
+                        }
+                    }
                     // {
                     //     title: '操作',
                     //     key: 'show_more',
@@ -300,7 +333,8 @@
             },
         	ok () {
                 let self = this
-                uAxios.delete('article/categories/' + self.id ).then((response) => {
+                console.log(self.id)
+                uAxios.delete('profiles/' + self.id ).then((response) => {
 	                if (response.data.code === 0) {
 						this.$Message.info('删除成功');
 	                    this.getlist()
@@ -315,9 +349,10 @@
             	console.log(this.value)
                 let self = this
                 let data = {
-                	title: this.value
+                	title: this.value,
+                    msgBiz: this.msgBiz
                 }
-                uAxios.put('article/categories/' + self.id, data).then((response) => {
+                uAxios.put('profiles/' + self.id, data).then((response) => {
 	                if (response.data.code === 0) {
 //	                	this.$Modal.error({
 //	                        content: '删除成功'
@@ -355,8 +390,13 @@
 
                     });
             },
-            remove (index) {
+            remove (index,_id) {
                 this.orgData.splice(index, 1);
+                console.log(_id)
+                uAxios.delete('profiles/' + _id)
+                    .then(res => {
+                        this.$Message.info('删除成功');
+                    });
             },
             handleSearch () {
             	let query = '&keyword=' + this.searchKeyword;

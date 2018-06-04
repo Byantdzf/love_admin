@@ -68,7 +68,6 @@
                     },
                     {
                         title: '发布时间',
-                        width: 120,
                         align: 'center',
                         key: 'createdAt',
                         sortable: true
@@ -76,6 +75,7 @@
                     {
                         title: '文章标题',
                         key: 'title',
+                        width: 800,
                         align: 'center',
                         render: (h, params) => {
                             // debugger
@@ -107,10 +107,12 @@
                     {
                         title: '阅读数',
                         key: 'readNum',
+                        width: 100,
                         align: 'center'
                     },
                     {
                         title: '点赞数',
+                        width: 100,
                         key: 'likeNum',
                         align: 'center'
                     },

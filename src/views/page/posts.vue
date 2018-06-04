@@ -101,20 +101,21 @@
                     {
                         title: '序号',
                         type: 'index',
-                        width: 120,
+                        width: 80,
                         align: 'center',
                         sortable: true
                     },
                     {
                         title: '发布时间',
-                        width: 120,
                         align: 'center',
                         key: 'createdAt',
+                        width: 180,
                         sortable: true
                     },
                     {
                         title: '文章标题',
                         key: 'title',
+                        width: 600,
                         align: 'center',
                          render: (h, params) => {
                             // debugger
@@ -145,19 +146,43 @@
                     {
                         title: '阅读数',
                         key: 'readNum',
+                        width: 100,
                         align: 'center'
                     },
                     {
                         title: '点赞数',
                         key: 'likeNum',
+                        width: 100,
                         align: 'center'
                     },
                     {
                         title: '更新时间',
                         key: 'updatedAt',
+                        width: 180,
                         align: 'center',
                         sortable: true
                     },
+                    // {
+                    //     title: '文章标题',
+                    //     key: 'tag',
+                    //     align: 'center',
+                    //     render: (h, params) => {
+                    //          // params.row.tag.forEach((item)=>{
+                    //          //     h('strong', {
+                    //          //        style: {
+                    //          //            margin: '12px',
+                    //          //            fontSize: '14px'
+                    //          //        },
+                    //          //        on: {
+                    //          //            click: () => {
+                    //          //                console.log(params.row.link)
+                    //          //                window.open(params.row.link)
+                    //          //            }
+                    //          //        }
+                    //          //    }, '哈哈')
+                    //         })
+                    //     }
+                    // },
                     // {
                     //     title: '时间间隔',
                     //     key: 'time',
@@ -263,7 +288,17 @@
                 console.log(this.post_ids)
             },
             handleSelectAll (status) {
-                this.modal = true
+                let self = this
+                uAxios.get('labels')
+                    .then(res => {
+                        self.modal = true
+                        let result = res.data.data;
+                        self.labels = result.data;
+                        self.labels.forEach((item, index, arr) => {
+                            arr[index].active = false;
+                        })
+                        console.log(self.labels)
+                    });
             },
         	ok () {
                 let self = this
@@ -343,20 +378,14 @@
                         .then(res => {
                             let result = res.data.data;
                             self.orgData = result.data
+                            self.orgData.forEach((item,index,arr)=>{
+                                arr[index].tag = ['aa','bb','cc']
+                            })
                             console.log(self.orgData)
                             self.orgTotal = result.total
                             self.loading = false
                         });
                 }
-                uAxios.get('labels?page=' + page)
-                    .then(res => {
-                        let result = res.data.data;
-                        self.labels = result.data;
-                        self.labels.forEach((item, index, arr) => {
-                            arr[index].active = false;
-                        })
-                        console.log(self.labels)
-                    });
             },
             handleSearch () {
                 let read = ''

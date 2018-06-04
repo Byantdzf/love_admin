@@ -207,13 +207,9 @@
                         align: 'center'
                     },
                     {
-                        type: 'selection',
-                        width: 60,
-                        align: 'center'
-                    },
-                    {
                         title: '操作',
                         key: 'show_more',
+                        width: 100,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -221,9 +217,6 @@
                                     props: {
                                         type: 'primary',
                                         size: 'small'
-                                    },
-                                    style: {
-                                        margin: '5px'
                                     },
                                     on: {
                                         click: () => {
@@ -234,7 +227,13 @@
                                 }, '编辑标签'),
                             ]);
                         }
+                    },
+                    {
+                        type: 'selection',
+                        width: 60,
+                        align: 'center'
                     }
+
                 ],
                 modal: false,
                 value: '',

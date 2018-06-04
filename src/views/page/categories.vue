@@ -78,20 +78,21 @@
                     {
                         title: '序号',
                         type: 'index',
-                        width: 120,
+                        width: 80,
                         align: 'center',
                         sortable: true
                     },
                     {
                         title: '发布时间',
                         align: 'center',
+                        width: 150,
                         key: 'createdAt',
                         sortable: true
                     },
                     {
                         title: '文章标题',
                         key: 'title',
-                        width: 800,
+                        width: 600,
                         align: 'center',
                         render: (h, params) => {
                             // debugger
@@ -135,6 +136,7 @@
                     {
                         title: '更新时间',
                         key: 'updatedAt',
+                        width: 150,
                         align: 'center',
                         sortable: true
                     },
@@ -274,6 +276,10 @@
             deleteLabel (_id) {
                 this.modal1 = true
                 this.id = _id
+                let index = this.social.indexOf(_id)
+                if (index > -1) {
+                    this.social.splice(index, 1);
+                }
             },
             postlabels_move (_id, type) {
                 uAxios.post('postlabels/' + _id + '/move/' + type)

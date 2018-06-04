@@ -63,6 +63,18 @@
                 </Checkbox>
             </CheckboxGroup>
 	    </Modal>
+        <Modal
+                v-model="modal2"
+                title="编辑文章标签"
+                @on-ok="cancelOK"
+        >
+            <CheckboxGroup v-model="social1" v-for="(item,index) in labels">
+                <Checkbox :label="item._id" >
+                    <Icon type="ios-pricetags"></Icon>
+                    <span>{{item.title}}</span>
+                </Checkbox>
+            </CheckboxGroup>
+        </Modal>
     </div>
 </template>
 
@@ -86,6 +98,8 @@
                 id: '',
                 addressList: [],
                 modal1: false,
+                modal2: false,
+                social1:['5b11317d5360b92a60002151'],
                 social: [],
                 // label: (h) => {
                 //     return h('div', [
@@ -109,7 +123,7 @@
                         title: '发布时间',
                         align: 'center',
                         key: 'createdAt',
-                        width: 180,
+                        width: 150,
                         sortable: true
                     },
                     {
@@ -158,31 +172,15 @@
                     {
                         title: '更新时间',
                         key: 'updatedAt',
-                        width: 180,
+                        width: 150,
                         align: 'center',
                         sortable: true
                     },
-                    // {
-                    //     title: '文章标题',
-                    //     key: 'tag',
-                    //     align: 'center',
-                    //     render: (h, params) => {
-                    //          // params.row.tag.forEach((item)=>{
-                    //          //     h('strong', {
-                    //          //        style: {
-                    //          //            margin: '12px',
-                    //          //            fontSize: '14px'
-                    //          //        },
-                    //          //        on: {
-                    //          //            click: () => {
-                    //          //                console.log(params.row.link)
-                    //          //                window.open(params.row.link)
-                    //          //            }
-                    //          //        }
-                    //          //    }, '哈哈')
-                    //         })
-                    //     }
-                    // },
+                    {
+                        title: '标签',
+                        key: 'label_str',
+                        align: 'center',
+                    },
                     // {
                     //     title: '时间间隔',
                     //     key: 'time',
@@ -212,53 +210,31 @@
                         type: 'selection',
                         width: 60,
                         align: 'center'
+                    },
+                    {
+                        title: '操作',
+                        key: 'show_more',
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.id = params.row._id
+                                            this.handleSelectAll2(params.row.post_label)
+                                        }
+                                    }
+                                }, '编辑标签'),
+                            ]);
+                        }
                     }
-                    // {
-                    //     title: '操作',
-                    //     // width: ,
-                    //     key: 'show_more',
-                    //     align: 'center',
-                    //     render: (h, params) => {
-                    //         return h('div', [
-                    //             h('Checkbox', {
-                    //                 props: {
-                    //                     type: 'primary',
-                    //                     size: 'small'
-                    //                 },
-                    //                 style: {
-                    //                     marginRight: '10px'
-                    //                 },
-                    //                 on: {
-                    //                     click: () => {
-                    //                         let argu = {articles_id: params.row.id};
-                    //                         this.$router.push({
-                    //                             name: 'articles-info',
-                    //                             params: argu
-                    //                         });
-                    //                     }
-                    //                 }
-                    //             }, ),
-                    //             h('Button', {
-                    //                 props: {
-                    //                     type: 'primary',
-                    //                     size: 'small'
-                    //                 },
-                    //                 style: {
-                    //                     marginRight: '10px'
-                    //                 },
-                    //                 on: {
-                    //                     click: () => {
-                    //                         let argu = {articles_id: params.row.id};
-                    //                         this.$router.push({
-                    //                             name: 'articles-info',
-                    //                             params: argu
-                    //                         });
-                    //                     }
-                    //                 }
-                    //             }, '添加标签')
-                    //         ]);
-                    //     }
-                    // }
                 ],
                 modal: false,
                 value: '',
@@ -292,6 +268,24 @@
                 uAxios.get('labels')
                     .then(res => {
                         self.modal = true
+                        let result = res.data.data;
+                        self.labels = result.data;
+                        self.labels.forEach((item, index, arr) => {
+                            arr[index].active = false;
+                        })
+                        console.log(self.labels)
+                    });
+            },
+            handleSelectAll2 (post_label) {
+                console.log(post_label)
+                let self = this
+                self.social1 = []
+                post_label.forEach((item, index, arr) => {
+                    self.social1.push(arr[index].label._id);
+                });
+                uAxios.get('labels')
+                    .then(res => {
+                        self.modal2 = true
                         let result = res.data.data;
                         self.labels = result.data;
                         self.labels.forEach((item, index, arr) => {
@@ -336,6 +330,27 @@
                     });
                 }
             },
+            cancelOK (e) {
+                let self = this
+                console.log(self.social1)
+                let array = []
+                    array.push(this.id)
+                    let data = {
+                        label_ids: this.social1,
+                        post_ids: array
+                    }
+                    console.log(data)
+                    uAxios.post('posts/labels', data).then((response) => {
+                        if (response.data.code === 0) {
+                            this.$Message.info('修改成功');
+                            this.getlist(1)
+                        } else {
+                            this.$Modal.error({
+                                content: response.data.message
+                            });
+                        }
+                    })
+            },
             getTab (type) {
                 // 获得激活的Tab页
                 this.activeTab = type;
@@ -376,11 +391,9 @@
                 } else {
                     uAxios.get('posts?page=' + page + query +read)
                         .then(res => {
-                            let result = res.data.data;
+                            let result = res.data.data
+                            let  array = [];
                             self.orgData = result.data
-                            self.orgData.forEach((item,index,arr)=>{
-                                arr[index].tag = ['aa','bb','cc']
-                            })
                             console.log(self.orgData)
                             self.orgTotal = result.total
                             self.loading = false

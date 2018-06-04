@@ -50,7 +50,7 @@
 	    </Modal>
 	    <Modal
         	v-model="modal"
-	        title="编辑分栏"
+	        title="编辑公众号"
 	        @on-ok="cancel"
 	        >
 	         <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>

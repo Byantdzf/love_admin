@@ -15,7 +15,9 @@
                         <Icon type="ionic"></Icon>
                         点击标签筛选
                     </p>
-                    <CheckboxGroup v-model="social" v-for="(item,index) in labels" @on-change="filterLabel">
+                    <CheckboxGroup v-model="social" v-for="(item,index) in labels" @on-change="filterLabel" style="margin-bottom: 12px">
+                        <Button type="primary"  size="small" @click="editLabel(item._id,item.title)">修改</Button>
+                        <Button type="error"  size="small" @click="deleteLabel(item._id)">删除</Button>
                         <Checkbox :label="item._id">
                             <Icon type="ios-pricetags"></Icon>
                             <span>{{item.title}}</span>
@@ -28,6 +30,20 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
             </TabPane>
         </Tabs>
+        <Modal
+                v-model="modal1"
+                title="温馨提示"
+                @on-ok="ok"
+        >
+            <p>是否确定删除该标签？</p>
+        </Modal>
+        <Modal
+                v-model="modal"
+                title="编辑标签"
+                @on-ok="cancel"
+        >
+            <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>
+        </Modal>
     </div>
 </template>
 
@@ -250,6 +266,15 @@
         },
         methods: {
             // 创建标签
+            editLabel (_id,title) {
+                this.modal = true
+                this.id = _id
+                this.value = title
+            },
+            deleteLabel (_id) {
+                this.modal1 = true
+                this.id = _id
+            },
             postlabels_move (_id, type) {
                 uAxios.post('postlabels/' + _id + '/move/' + type)
                     .then(res => {
@@ -299,11 +324,8 @@
             },
             ok () {
                 let self = this
-                uAxios.delete('article/categories/' + self.id ).then((response) => {
+                uAxios.delete('labels/' + self.id ).then((response) => {
                     if (response.data.code === 0) {
-//	                	this.$Modal.error({
-//	                        content: '删除成功'
-//	                    });
                         this.$Message.info('删除成功');
                         this.getlist()
                     } else {
@@ -319,11 +341,8 @@
                 let data = {
                     title: this.value
                 }
-                uAxios.put('article/categories/' + self.id, data).then((response) => {
+                uAxios.put('labels/' + self.id, data).then((response) => {
                     if (response.data.code === 0) {
-//	                	this.$Modal.error({
-//	                        content: '删除成功'
-//	                    });
                         this.$Message.info('修改成功');
                         this.getlist()
                     } else {

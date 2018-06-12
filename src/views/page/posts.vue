@@ -128,7 +128,7 @@
                         title: '发布时间',
                         align: 'center',
                         key: 'createdAt',
-                        width: 150,
+                        width: 100,
                         sortable: true
                     },
                     {
@@ -177,7 +177,7 @@
                     {
                         title: '更新时间',
                         key: 'updatedAt',
-                        width: 150,
+                        width: 100,
                         align: 'center',
                         sortable: true
                     },

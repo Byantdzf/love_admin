@@ -143,12 +143,14 @@
                         title: '最近',
                         key: 'new_createAt',
                         align: 'center',
+                        width: 100,
                         editable: true
                     },
                     {
                         title: '最旧',
                         key: 'last_createAt',
                         align: 'center',
+                        width: 100,
                         editable: true
                     },
                     {

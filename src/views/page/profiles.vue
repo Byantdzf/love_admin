@@ -2,7 +2,7 @@
     <div v-model="activeTab">
         <Tabs @on-click="getTab">
             <TabPane label="公众号列表"  name="org">
-                <Col span="20">
+                <Col span="24">
                     <Input
                             v-model="searchKeyword"
                             @on-enter="handleSearch"
@@ -15,7 +15,9 @@
                     <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                           style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
-                <Col span="4">
+            </TabPane>
+            <TabPane label="创建公众号"  name="editorg">
+                <Col span="10">
                     <Card>
                         <p slot="title">
                             <Icon type="navicon-round" class="Primary"></Icon>
@@ -38,7 +40,6 @@
                         </p>
                     </Card>
                 </Col>
-
             </TabPane>
         </Tabs>
         <Modal
@@ -139,20 +140,20 @@
                             ]);
                         }
                     },
-                    {
-                        title: '最近',
-                        key: 'new_createAt',
-                        align: 'center',
-                        width: 100,
-                        editable: true
-                    },
-                    {
-                        title: '最旧',
-                        key: 'last_createAt',
-                        align: 'center',
-                        width: 100,
-                        editable: true
-                    },
+                    // {
+                    //     title: '最近',
+                    //     key: 'new_createAt',
+                    //     align: 'center',
+                    //     width: 100,
+                    //     editable: true
+                    // },
+                    // {
+                    //     title: '最旧',
+                    //     key: 'last_createAt',
+                    //     align: 'center',
+                    //     width: 100,
+                    //     editable: true
+                    // },
                     {
                         title: '文章数',
                         key: 'post_count',

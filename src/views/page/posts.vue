@@ -174,16 +174,17 @@
                         width: 80,
                         align: 'center'
                     },
-                    {
-                        title: '更新时间',
-                        key: 'updatedAt',
-                        width: 100,
-                        align: 'center',
-                        sortable: true
-                    },
+                    // {
+                    //     title: '更新时间',
+                    //     key: 'updatedAt',
+                    //     width: 100,
+                    //     align: 'center',
+                    //     sortable: true
+                    // },
                     {
                         title: '标签',
                         key: 'label_str',
+                        width: 200,
                         align: 'center',
                     },
                     // {
@@ -194,6 +195,7 @@
                     {
                         title: '公众号头像',
                         key: 'profile_title',
+                        width: 200,
                         render: (h, params) => {
                             // debugger
                             return h('div', [

@@ -85,14 +85,13 @@
                     {
                         title: '发布时间',
                         align: 'center',
-                        width: 150,
+                        width: 100,
                         key: 'createdAt',
                         sortable: true
                     },
                     {
                         title: '文章标题',
                         key: 'title',
-                        width: 600,
                         align: 'center',
                         render: (h, params) => {
                             // debugger
@@ -129,14 +128,14 @@
                     },
                     {
                         title: '点赞数',
-                        width: 100,
                         key: 'likeNum',
+                        width: 100,
                         align: 'center'
                     },
                     {
                         title: '更新时间',
                         key: 'updatedAt',
-                        width: 150,
+                        width: 100,
                         align: 'center',
                         sortable: true
                     },

@@ -2,7 +2,7 @@
     <div v-model="activeTab">
         <Tabs @on-click="getTab">
             <TabPane label="公众号列表"  name="org">
-                <Col span="19">
+                <Col span="20">
                     <Input
                             v-model="searchKeyword"
                             @on-enter="handleSearch"
@@ -15,7 +15,7 @@
                     <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                           style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
-                <Col span="4" offset="1">
+                <Col span="4">
                     <Card>
                         <p slot="title">
                             <Icon type="navicon-round" class="Primary"></Icon>
@@ -92,7 +92,7 @@
                     {
                         title: '序号',
                         type: 'index',
-                        width: 120,
+                        width: 80,
                         align: 'center',
                         sortable: true
                     },
@@ -100,6 +100,7 @@
                         title: '更新时间',
                         key: 'updatedAt',
                         align: 'center',
+                        width: 100,
                         editable: true
                     },
                     {
@@ -115,14 +116,13 @@
                                 })
                             ]);
                         },
-                        width: 100,
+                        width: 80,
                         align: 'center'
                     },
                     {
                         title: '公众号',
                         key: 'title',
                         align: 'center',
-                        width: 250,
                         render: (h, params) => {
                             return h('div', [
                                 h('strong', {

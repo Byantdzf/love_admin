@@ -1,49 +1,53 @@
 <template>
     <div v-model="activeTab">
-        <Tabs @on-click="getTab">
-            <TabPane label="全部数据"  name="allRead">
-                <Input
-                        v-model="searchKeyword"
-                        @on-enter="handleSearch"
-                        placeholder="关键字搜索..."
-                        style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
+        <Row>
+            <Col span="24">
+                <Tabs @on-click="getTab">
+                    <TabPane label="全部数据"  name="allRead">
+                        <Input
+                                v-model="searchKeyword"
+                                @on-enter="handleSearch"
+                                placeholder="关键字搜索..."
+                                style="width: 200px; margin-bottom: 22px;"/>
+                        <span @click="handleSearch" >
                     <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
                 </span>
-                <Button @click="handleSelectAll()" style="float: right" icon="checkmark-round">批量打标签</Button>
-                <Table :loading="loading" :columns="orgColumns" :data="orgData" style="width: 100%;" border  @on-selection-change="selectionchange"></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-            </TabPane>
-            <TabPane label="有阅读量"   name="haveRead">
-                <Input
-                        v-model="searchKeyword"
-                        @on-enter="handleSearch"
-                        placeholder="关键字搜索..."
-                        style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
+                        <Button @click="handleSelectAll()" style="float: right" icon="checkmark-round">批量打标签</Button>
+                        <Table :loading="loading" :columns="orgColumns" :data="orgData" border  @on-selection-change="selectionchange"></Table>
+                        <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
+                              style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
+                    </TabPane>
+                    <TabPane label="有阅读量"   name="haveRead">
+                        <Input
+                                v-model="searchKeyword"
+                                @on-enter="handleSearch"
+                                placeholder="关键字搜索..."
+                                style="width: 200px; margin-bottom: 22px;"/>
+                        <span @click="handleSearch" >
                     <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
                 </span>
-                <Button @click="handleSelectAll()" style="float: right" icon="checkmark-round">批量打标签</Button>
-                <Table :loading="loading" :columns="orgColumns" :data="orgData" style="width: 100%;" border  @on-selection-change="selectionchange"></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-            </TabPane>
-            <TabPane label="无阅读量"   name="noneRead">
-                <Input
-                        v-model="searchKeyword"
-                        @on-enter="handleSearch"
-                        placeholder="关键字搜索..."
-                        style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
+                        <Button @click="handleSelectAll()" style="float: right" icon="checkmark-round">批量打标签</Button>
+                        <Table :loading="loading" :columns="orgColumns" :data="orgData"  border  @on-selection-change="selectionchange"></Table>
+                        <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
+                              style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
+                    </TabPane>
+                    <TabPane label="无阅读量"   name="noneRead">
+                        <Input
+                                v-model="searchKeyword"
+                                @on-enter="handleSearch"
+                                placeholder="关键字搜索..."
+                                style="width: 200px; margin-bottom: 22px;"/>
+                        <span @click="handleSearch" >
                     <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
                 </span>
-                <Button @click="handleSelectAll()" style="float: right" icon="checkmark-round">批量打标签</Button>
-                <Table :loading="loading" :columns="orgColumns" :data="orgData" style="width: 100%;" border  @on-selection-change="selectionchange"></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-            </TabPane>
-        </Tabs>
+                        <Button @click="handleSelectAll()" style="float: right" icon="checkmark-round">批量打标签</Button>
+                        <Table :loading="loading" :columns="orgColumns" :data="orgData"  border  @on-selection-change="selectionchange"></Table>
+                        <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
+                              style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
+                    </TabPane>
+                </Tabs>
+            </Col>
+        </Row>
         <Modal
         	v-model="modal1"
 	        title="温馨提示"
@@ -117,6 +121,7 @@
                         type: 'index',
                         width: 80,
                         align: 'center',
+                        // fixed: 'left',
                         sortable: true
                     },
                     {
@@ -129,7 +134,7 @@
                     {
                         title: '文章标题',
                         key: 'title',
-                        width: 600,
+                        // width: 600,
                         align: 'center',
                          render: (h, params) => {
                             // debugger
@@ -160,13 +165,13 @@
                     {
                         title: '阅读数',
                         key: 'readNum',
-                        width: 100,
+                        width: 80,
                         align: 'center'
                     },
                     {
                         title: '点赞数',
                         key: 'likeNum',
-                        width: 100,
+                        width: 80,
                         align: 'center'
                     },
                     {
@@ -210,6 +215,7 @@
                         title: '操作',
                         key: 'show_more',
                         width: 100,
+                        // fixed: 'right',
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [

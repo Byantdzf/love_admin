@@ -228,8 +228,8 @@
                                     },
                                     on: {
                                         click: () => {
-//                                      	console.log()
-                                            this.postlabels_move(params.row.post_label[0]._id,'up')
+                                        	console.log(params.row._id)
+                                            this.postlabels_move(params.row._id,'up')
                                         }
                                     }
                                 }, '上移'),
@@ -243,7 +243,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.postlabels_move(params.row.post_label[0]._id,'down')
+                                            this.postlabels_move(params.row._id,'down')
                                         }
                                     }
                                 }, '下移'),
@@ -257,7 +257,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.postlabels_move(params.row.post_label[0]._id,'start')
+                                            this.postlabels_move(params.row._id,'start')
                                         }
                                     }
                                 }, '置顶'),
@@ -271,7 +271,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.postlabels_move(params.row.post_label[0]._id,'end')
+                                            this.postlabels_move(params.row._id,'end')
                                         }
                                     }
                                 }, '置底')
@@ -370,15 +370,22 @@
                 }
             },
             postlabels_move (_id, type) {
-            	let self = this
-                uAxios.post('postlabels/' + _id + '/move/' + type)
+            	let self = this,
+            		data = {
+                		label_ids: self.social
+                	}
+                	console.log(data)
+                	
+                uAxios.post('postlabels/' + _id + '/move/' + type,data)
                     .then(res => {
                         console.log(res.data.code)
                         if(res.data.code == 0){
                             self.$Message.info('操作成功');
                             self.getlist(1)
                         }else{
-                            self.$Message.error(res.message);
+                            self.$Modal.error({
+                            	content: res.data.message
+                        	});
                         }
                     });
             },
@@ -461,9 +468,12 @@
 
             },
             getlist (page) {
-                let self = this;
+                let self = this,
+                	data = {
+                		label_ids: self.social
+                	}
                 self.loading = true
-                uAxios.get('labels/posts/v2?page=' + page)
+                uAxios.get('labels/posts/v2?page=' + page,data)
                     .then(res => {
                         let result = res.data.data;
 //                      self.orgData = result.data.map((item)=>{

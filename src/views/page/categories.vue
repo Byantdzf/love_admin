@@ -228,7 +228,8 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.postlabels_move(params.row.move_id,'up')
+//                                      	console.log()
+                                            this.postlabels_move(params.row.post_label[0]._id,'up')
                                         }
                                     }
                                 }, '上移'),
@@ -242,7 +243,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.postlabels_move(params.row.move_id,'down')
+                                            this.postlabels_move(params.row.post_label[0]._id,'down')
                                         }
                                     }
                                 }, '下移'),
@@ -256,7 +257,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.postlabels_move(params.row.move_id,'start')
+                                            this.postlabels_move(params.row.post_label[0]._id,'start')
                                         }
                                     }
                                 }, '置顶'),
@@ -270,7 +271,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.postlabels_move(params.row.move_id,'end')
+                                            this.postlabels_move(params.row.post_label[0]._id,'end')
                                         }
                                     }
                                 }, '置底')
@@ -369,14 +370,15 @@
                 }
             },
             postlabels_move (_id, type) {
+            	let self = this
                 uAxios.post('postlabels/' + _id + '/move/' + type)
                     .then(res => {
                         console.log(res.data.code)
                         if(res.data.code == 0){
-                            this.$Message.info('操作成功');
-                            this.getlist(1)
+                            self.$Message.info('操作成功');
+                            self.getlist(1)
                         }else{
-                            this.$Message.error(res.message);
+                            self.$Message.error(res.message);
                         }
                     });
             },

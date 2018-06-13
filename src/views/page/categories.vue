@@ -210,73 +210,73 @@
                                 }, '编辑标签'),
                             ]);
                         }
-                    },
-                    {
-                        title: '操作',
-                        key: 'title',
-                        width: 140,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        margin: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                        	console.log(params.row._id)
-                                            this.postlabels_move(params.row._id,'up')
-                                        }
-                                    }
-                                }, '上移'),
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        margin: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.postlabels_move(params.row._id,'down')
-                                        }
-                                    }
-                                }, '下移'),
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        margin: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.postlabels_move(params.row._id,'start')
-                                        }
-                                    }
-                                }, '置顶'),
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        margin: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.postlabels_move(params.row._id,'end')
-                                        }
-                                    }
-                                }, '置底')
-                            ]);
-                        }
+//                  },
+//                  {
+//                      title: '操作',
+//                      key: 'title',
+//                      width: 140,
+//                      align: 'center',
+//                      render: (h, params) => {
+//                          return h('div', [
+//                              h('Button', {
+//                                  props: {
+//                                      type: 'primary',
+//                                      size: 'small'
+//                                  },
+//                                  style: {
+//                                      margin: '5px'
+//                                  },
+//                                  on: {
+//                                      click: () => {
+//                                      	console.log(params.row._id)
+//                                          this.postlabels_move(params.row._id,'up')
+//                                      }
+//                                  }
+//                              }, '上移'),
+//                              h('Button', {
+//                                  props: {
+//                                      type: 'primary',
+//                                      size: 'small'
+//                                  },
+//                                  style: {
+//                                      margin: '5px'
+//                                  },
+//                                  on: {
+//                                      click: () => {
+//                                          this.postlabels_move(params.row._id,'down')
+//                                      }
+//                                  }
+//                              }, '下移'),
+//                              h('Button', {
+//                                  props: {
+//                                      type: 'primary',
+//                                      size: 'small'
+//                                  },
+//                                  style: {
+//                                      margin: '5px'
+//                                  },
+//                                  on: {
+//                                      click: () => {
+//                                          this.postlabels_move(params.row._id,'start')
+//                                      }
+//                                  }
+//                              }, '置顶'),
+//                              h('Button', {
+//                                  props: {
+//                                      type: 'primary',
+//                                      size: 'small'
+//                                  },
+//                                  style: {
+//                                      margin: '5px'
+//                                  },
+//                                  on: {
+//                                      click: () => {
+//                                          this.postlabels_move(params.row._id,'end')
+//                                      }
+//                                  }
+//                              }, '置底')
+//                          ]);
+//                      }
                     }
                 ],
                 modal: false,

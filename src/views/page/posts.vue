@@ -78,6 +78,14 @@
                     <span>{{item.title}}</span>
                 </Checkbox>
             </CheckboxGroup>
+            <Input
+                    v-model="editlable"
+                    @on-enter="createLabel"
+                    placeholder="添加标签..."
+                    style="width: 150px;height: 42px; margin-bottom: -12px;margin-top: 12px"/>
+            <span @click="createLabel" >
+                    <Button type="primary" style="margin-bottom: -14px;">添加</Button>
+                </span>
         </Modal>
     </div>
 </template>
@@ -103,6 +111,7 @@
                 addressList: [],
                 modal1: false,
                 modal2: false,
+                editlable:'',
                 social1:['5b11317d5360b92a60002151'],
                 social: [],
                 // label: (h) => {
@@ -406,6 +415,24 @@
                             self.loading = false
                         });
                 }
+            },
+            createLabel () {
+                let self = this
+                console.log(this.editlable);
+                let data = {
+                    title: this.editlable
+                }
+                uAxios.post('labels', data)
+                    .then(res => {
+                        uAxios.get('labels')
+                            .then(res => {
+                                let result = res.data.data;
+                                self.labels = result.data;
+                                self.labels.forEach((item, index, arr) => {
+                                    arr[index].active = false;
+                                })
+                            });
+                    });
             },
             handleSearch () {
                 let read = ''

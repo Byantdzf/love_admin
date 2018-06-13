@@ -38,11 +38,24 @@
             <p>是否确定删除该标签？</p>
         </Modal>
         <Modal
-                v-model="modal"
-                title="编辑标签"
-                @on-ok="cancel"
+                v-model="modal2"
+                title="编辑文章标签"
+                @on-ok="cancelOK"
         >
-            <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>
+            <CheckboxGroup v-model="social1" v-for="(item,index) in labels">
+                <Checkbox :label="item._id" >
+                    <Icon type="ios-pricetags"></Icon>
+                    <span>{{item.title}}</span>
+                </Checkbox>
+            </CheckboxGroup>
+            <!--<Input-->
+                    <!--v-model="editlable"-->
+                    <!--@on-enter="createLabel"-->
+                    <!--placeholder="添加标签..."-->
+                    <!--style="width: 150px;height: 42px; margin-bottom: -12px;margin-top: 12px"/>-->
+            <!--<span @click="createLabel" >-->
+                    <!--<Button type="primary" style="margin-bottom: -14px;">添加</Button>-->
+                <!--</span>-->
         </Modal>
     </div>
 </template>
@@ -72,7 +85,9 @@
                 id: '',
                 addressList: [],
                 modal1: false,
+                modal2: false,
                 social: [],
+                social1:['5b11317d5360b92a60002151'],
                 labels: [],
                 orgColumns: [
                     {
@@ -166,8 +181,32 @@
                         align: 'center'
                     },
                     {
+                        title: '标签',
+                        key: 'show_more',
+                        width: 100,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.id = params.row._id
+                                            console.log(params.row.post_label)
+                                            this.handleSelectAll2(params.row.post_label)
+                                        }
+                                    }
+                                }, '编辑标签'),
+                            ]);
+                        }
+                    },
+                    {
                         title: '操作',
                         key: 'title',
+                        width: 140,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -267,6 +306,46 @@
             }
         },
         methods: {
+            cancelOK (e) {
+                let self = this
+                console.log(self.social1)
+                let array = []
+                array.push(this.id)
+                let data = {
+                    label_ids: this.social1,
+                    post_ids: array
+                }
+                console.log(data)
+                uAxios.post('posts/labels', data).then((response) => {
+                    if (response.data.code === 0) {
+                        this.$Message.info('修改成功');
+                        this.getlist(1)
+                    } else {
+                        this.$Modal.error({
+                            content: response.data.message
+                        });
+                    }
+                })
+            },
+            handleSelectAll2 (post_label) {
+                console.log(post_label)
+//              debugger
+                let self = this
+                self.social1 = []
+                post_label.forEach((item, index, arr) => {
+                    self.social1.push(arr[index].label._id);
+                });
+                uAxios.get('labels')
+                    .then(res => {
+                        self.modal2 = true
+                        let result = res.data.data;
+                        self.labels = result.data;
+                        self.labels.forEach((item, index, arr) => {
+                            arr[index].active = false;
+                        })
+                        console.log(self.labels)
+                    });
+            },
             // 创建标签
             editLabel (_id,title) {
                 this.modal = true
@@ -392,7 +471,8 @@
                                _id: item.post._id,
                                likeNum: item.post.likeNum,
                                readNum: item.post.readNum,
-                               title: item.post.title
+                               title: item.post.title,
+                               post_label: item.post.post_label
                             }
                         })
                         console.log(self.orgData)

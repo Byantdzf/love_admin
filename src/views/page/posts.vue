@@ -431,6 +431,7 @@
                                 self.labels.forEach((item, index, arr) => {
                                     arr[index].active = false;
                                 })
+                                self.editlable = ''
                             });
                     });
             },

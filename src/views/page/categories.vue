@@ -37,8 +37,15 @@
         >
             <p>是否确定删除该标签？</p>
         </Modal>
-        <Modal
+         <Modal
                 v-model="modal2"
+                title="编辑标签"
+                @on-ok="cancel"
+        >
+            <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>
+        </Modal>
+        <Modal
+                v-model="modal"
                 title="编辑文章标签"
                 @on-ok="cancelOK"
         >
@@ -84,6 +91,7 @@
                 industryList: [],
                 id: '',
                 addressList: [],
+                modal: false,
                 modal1: false,
                 modal2: false,
                 social: [],
@@ -337,7 +345,7 @@
                 });
                 uAxios.get('labels')
                     .then(res => {
-                        self.modal2 = true
+                        self.modal = true
                         let result = res.data.data;
                         self.labels = result.data;
                         self.labels.forEach((item, index, arr) => {
@@ -348,7 +356,7 @@
             },
             // 创建标签
             editLabel (_id,title) {
-                this.modal = true
+                this.modal2 = true
                 this.id = _id
                 this.value = title
             },
@@ -399,9 +407,7 @@
                 uAxios.post('labels/posts?page=' + page, data)
                     .then(res => {
                         let result = res.data.data;
-                        self.orgData = result.data.map((item)=>{
-                            return item.post
-                        })
+                        self.orgData = result.data
                         console.log(self.orgData)
                         self.orgTotal = result.total;
                         self.searchKeyword = ''
@@ -428,7 +434,7 @@
                 }
                 uAxios.put('labels/' + self.id, data).then((response) => {
                     if (response.data.code === 0) {
-                        this.$Message.info('修改成功');
+                        this.$Message.info('标记成功');
                         this.getlist()
                     } else {
                         this.$Modal.error({
@@ -458,23 +464,24 @@
                 uAxios.get('labels/posts/v2?page=' + page)
                     .then(res => {
                         let result = res.data.data;
-                        self.orgData = result.data.map((item)=>{
-                           return {
-                               move_id: item._id,
-                               link:  item.post.link,
-                               profile: item.post.profile,
-                               msgBiz: item.post.msgBiz,
-                               createdAt: item.post.createdAt,
-                               digest: item.post.digest,
-                               publishAt: item.post.publishAt,
-                               updatedAt: item.post.updatedAt,
-                               _id: item.post._id,
-                               likeNum: item.post.likeNum,
-                               readNum: item.post.readNum,
-                               title: item.post.title,
-                               post_label: item.post.post_label
-                            }
-                        })
+//                      self.orgData = result.data.map((item)=>{
+//                         return {
+//                             move_id: item._id,
+//                             link:  item.post.link,
+//                             profile: item.post.profile,
+//                             msgBiz: item.post.msgBiz,
+//                             createdAt: item.post.createdAt,
+//                             digest: item.post.digest,
+//                             publishAt: item.post.publishAt,
+//                             updatedAt: item.post.updatedAt,
+//                             _id: item.post._id,
+//                             likeNum: item.post.likeNum,
+//                             readNum: item.post.readNum,
+//                             title: item.post.title,
+//                             post_label: item.post.post_label
+//                          }
+//                      })
+						self.orgData = result.data
                         console.log(self.orgData)
                         self.orgTotal = result.total
                         self.loading = false

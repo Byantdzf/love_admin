@@ -324,7 +324,7 @@
                                 self.$Message.info('添加成功');
                                 setTimeout(function () {
                                     // location.reload();
-                                    self.getlist('1')
+//                                    self.getlist('1')
                                     self.title = ''
                                     self.msgBiz = ''
                                 }, 500);
@@ -340,7 +340,7 @@
                 uAxios.delete('profiles/' + self.id ).then((response) => {
 	                if (response.data.code === 0) {
 						this.$Message.info('删除成功');
-	                    this.getlist()
+	                    this.getlist(this.currentPage)
 	                } else {
 	                    this.$Modal.error({
 	                        content: response.data.message
@@ -361,7 +361,7 @@
 //	                        content: '删除成功'
 //	                    });
 						this.$Message.info('修改成功');
-	                    this.getlist()
+	                    this.getlist(this.currentPage)
 	                } else {
 	                    this.$Modal.error({
 	                        content: response.data.message
@@ -375,7 +375,7 @@
             },
             handlePage (num) {
                 // 分页
-//              self.currentPage = num;
+                this.currentPage = num;
                 this.getlist(num);
 
             },

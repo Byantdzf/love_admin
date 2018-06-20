@@ -328,7 +328,7 @@
                 uAxios.post('posts/labels', data).then((response) => {
                     if (response.data.code === 0) {
                         this.$Message.info('修改成功');
-                        this.getlist(1)
+                        this.getlist(this.currentPage)
                     } else {
                         this.$Modal.error({
                             content: response.data.message
@@ -381,7 +381,7 @@
                         console.log(res.data.code)
                         if(res.data.code == 0){
                             self.$Message.info('操作成功');
-                            self.getlist(1)
+                            self.getlist(this.currentPage)
                         }else{
                             self.$Modal.error({
                             	content: res.data.message
@@ -413,7 +413,7 @@
                 let data = {
                     label_ids: this.social
                 }
-                uAxios.post('labels/posts?page=' + page, data)
+                uAxios.post('labels/posts?page=' + 1, data)
                     .then(res => {
                         let result = res.data.data;
                         self.orgData = result.data
@@ -427,7 +427,7 @@
                 uAxios.delete('labels/' + self.id ).then((response) => {
                     if (response.data.code === 0) {
                         this.$Message.info('删除成功');
-                        this.getlist()
+                        this.getlist(this.currentPage)
                     } else {
                         this.$Modal.error({
                             content: response.data.message
@@ -444,7 +444,7 @@
                 uAxios.put('labels/' + self.id, data).then((response) => {
                     if (response.data.code === 0) {
                         this.$Message.info('标记成功');
-                        this.getlist()
+                        this.getlist(this.currentPage)
                     } else {
                         this.$Modal.error({
                             content: response.data.message
@@ -459,7 +459,7 @@
             },
             handlePage (num) {
                 // 分页
-//              self.currentPage = num;
+                this.currentPage = num;
                 if (this.social.length == 0) {
                     this.getlist(num);
                 } else {

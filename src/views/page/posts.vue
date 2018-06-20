@@ -315,7 +315,7 @@
                 uAxios.delete('article/categories/' + self.id ).then((response) => {
 	                if (response.data.code === 0) {
 						this.$Message.info('删除成功');
-	                    this.getlist()
+	                    this.getlist(this.currentPage)
 	                } else {
 	                    this.$Modal.error({
 	                        content: response.data.message
@@ -337,7 +337,7 @@
                     uAxios.post('posts/labels', data).then((response) => {
                         if (response.data.code === 0) {
                             this.$Message.info('标记成功');
-                            this.getlist(1)
+                            this.getlist(this.currentPage)
                         } else {
                             this.$Modal.error({
                                 content: response.data.message
@@ -359,7 +359,7 @@
                     uAxios.post('posts/labels', data).then((response) => {
                         if (response.data.code === 0) {
                             this.$Message.info('修改成功');
-                            this.getlist(1)
+                            this.getlist(this.currentPage)
                         } else {
                             this.$Modal.error({
                                 content: response.data.message
@@ -374,7 +374,7 @@
             },
             handlePage (num) {
                 // 分页
-//              self.currentPage = num;
+                this.currentPage = num;
                 this.getlist(num);
 
             },
@@ -458,6 +458,14 @@
         mounted () {
             if(this.$route.query.msgBiz){this.msgBiz = this.$route.query.msgBiz}
             this.getlist(1)
+//            document.onkeydown = function (e) {//键盘按键控制
+//                e = e || window.event;
+//                if ((e.ctrlKey && e.keyCode == 82) || //ctrl+R
+//                    e.keyCode == 116) {//F5刷新，禁止
+//                    setTimeout(function () { alert('按下F5或者CTRL+R'); }, 100);//延时提醒，要不alert会导致return false被alert挂起从而浏览器执行了刷新
+//                    return false
+//                }
+//            }
         }
     };
 </script>

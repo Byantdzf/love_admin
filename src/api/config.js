@@ -1,7 +1,7 @@
 import QS from 'qs';
 
 export default {
-    baseURL: 'http://scraper.hankin.com/api/',
+    baseURL: 'http://love.hankin.com/api/',
     method: 'GET',
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

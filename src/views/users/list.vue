@@ -21,7 +21,6 @@
                             <span>{{item}}</span>
                         </Radio>
                     </RadioGroup>
-
                 </Card>
                 <Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>
                 <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
@@ -47,7 +46,7 @@
                 orgTotal: 0,
                 id: '',
                 social: '',
-                labels: ['男','女','全部'],
+                labels: ['全部','男','女'],
                 Columns: [
                     {
                         title: '序号',
@@ -59,28 +58,27 @@
                     {
                         title: '名称',
                         align: 'center',
-                        key: 'updatedAt'
+                        key: 'name'
                     },
                     {
                         title: '手机号',
                         align: 'center',
-                        key: 'updatedAt'
+                        key: 'mobile'
                     },
                     {
                         title: '头像',
                         key: 'updatedAt',
                         render: (h, params) => {
-                            // debugger
                             return h('div', [
-//                                h('Avatar', {
-//                                    props: {
-//                                        src: params.row.profile.headimg,
-//                                        size: 'large'
-//                                    },
-//                                    style: {
-//                                        margin: '0 10px 0 0'
-//                                    }
-//                                }),
+                                h('Avatar', {
+                                    props: {
+                                        src: params.row.avatar,
+                                        size: 'large'
+                                    },
+                                    style: {
+                                        margin: '0 10px 0 0'
+                                    }
+                                }),
 //                                h('strong', params.row.profile.title)
                             ]);
                         },
@@ -89,17 +87,19 @@
                     {
                         title: '用户类型',
                         align: 'center',
-                        key: 'updatedAt'
+                        key: 'type'
                     },
                     {
                         title: '性别',
                         align: 'center',
-                        key: 'updatedAt'
+                        width: 100,
+                        key: 'sex'
                     },
                     {
                         title: '加入时间',
                         align: 'center',
-                        key: 'updatedAt'
+                        width: 100,
+                        key: 'created_at'
                     },
 
                     {
@@ -315,10 +315,11 @@
                 console.log(this.social)
                 let self = this
                 let data = {
-                    label_ids: this.social
+                    sex: this.social
                 }
-                uAxios.post('labels/posts?page=' + 1, data)
+                uAxios.post('admin/users?page=' + 1, data)
                     .then(res => {
+                        debugger
                         let result = res.data.data;
                         self.orgData = result.data
                         console.log(self.orgData)
@@ -376,42 +377,26 @@
             getlist (page) {
                 let self = this,
                     data = {
-                        label_ids: self.social
+                        sex: self.social
                     }
                 self.loading = true
-                uAxios.get('labels/posts/v2?page=' + page,data)
+                uAxios.get('admin/users?page=' + page,data)
                     .then(res => {
                         let result = res.data.data;
-//                      self.orgData = result.data.map((item)=>{
-//                         return {
-//                             move_id: item._id,
-//                             link:  item.post.link,
-//                             profile: item.post.profile,
-//                             msgBiz: item.post.msgBiz,
-//                             createdAt: item.post.createdAt,
-//                             digest: item.post.digest,
-//                             publishAt: item.post.publishAt,
-//                             updatedAt: item.post.updatedAt,
-//                             _id: item.post._id,
-//                             likeNum: item.post.likeNum,
-//                             readNum: item.post.readNum,
-//                             title: item.post.title,
-//                             post_label: item.post.post_label
-//                          }
-//                      })
-                        self.orgData = result.data
-                        console.log(self.orgData)
+                      self.information = result.data.map((item)=>{
+                         return {
+                             avatar: item.avatar,
+                             created_at:  item.created_at,
+                             id: item.id,
+                             mobile: item.mobile,
+                             name: item.name,
+                             sex: item.sex == 1 ? '男' : '女',
+                             type: item.type == 'single' ? '单身' : '介绍人'
+                          }
+                      })
+                        console.log(self.information)
                         self.orgTotal = result.total
                         self.loading = false
-                    });
-                uAxios.get('labels')
-                    .then(res => {
-                        let result = res.data.data;
-                        self.labels = result.data;
-                        self.labels.forEach((item, index, arr) => {
-                            arr[index].active = false;
-                        })
-                        console.log(self.labels)
                     });
             },
             handleSearch () {
@@ -429,7 +414,7 @@
             }
         },
         mounted () {
-//            this.getlist(1)
+            this.getlist(1)
 //          this.getOrgData(1, '');
 //          this.$store.commit('updateMenulist');
         }

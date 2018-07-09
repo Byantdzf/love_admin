@@ -66,7 +66,7 @@ export default {
     },
     methods: {
         init () {
-            this.userName = Cookies.get('user');
+            this.userName = Cookies.get('name');
         },
         toggleClick () {
             this.shrink = !this.shrink;

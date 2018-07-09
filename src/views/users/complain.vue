@@ -53,16 +53,6 @@
                 id: '',
                 addressList: [],
                 modal1: false,
-                // label: (h) => {
-                //     return h('div', [
-                //         h('span', '标签一'),
-                //         h('Badge', {
-                //             props: {
-                //                 count: 3000
-                //             }
-                //         })
-                //     ])
-                // },
                 orgColumns: [
                     {
                         title: '序号',
@@ -73,7 +63,7 @@
                     },
                     {
                         title: '投诉人',
-                        key: 'updatedAt',
+                        key: 'user_name',
                         align: 'center',
 //                        width: 100,
                         editable: true
@@ -85,7 +75,7 @@
                             return h('div', [
                                 h('Avatar', {
                                     props: {
-                                        src: params.row.headimg,
+                                        src: params.row.user_avatar,
                                         size: 'large'
                                     }
                                 })
@@ -96,7 +86,7 @@
                     },
                     {
                         title: '被投诉人',
-                        key: 'updatedAt',
+                        key: 'complaint_name',
                         align: 'center',
 //                        width: 100,
                         editable: true
@@ -108,7 +98,7 @@
                             return h('div', [
                                 h('Avatar', {
                                     props: {
-                                        src: params.row.headimg,
+                                        src: params.row.complaint_avatar,
                                         size: 'large'
                                     }
                                 })
@@ -119,7 +109,7 @@
                     },
                     {
                         title: '投诉时间',
-                        key: 'updatedAt',
+                        key: 'created_at',
                         align: 'center',
 //                        width: 100,
                         editable: true
@@ -165,94 +155,80 @@
             };
         },
         methods: {
-            aaa (e){
-                console.log(e)
-                this.$router.push('/posts/index?msgBiz=' + e.msgBiz)
-                // this.$router.push({
-                //     name: '',
-                //     params: '/posts/index'
-                // });
-            },
-            save() {
-//                this.$Message.info('未调接口...');
-                let self = this;
-                if (self.title === '') {
-                    this.$Message.info('请输入公众号名称');
-                    console.log(self.classificationList);
-                } else if (self.msgBiz === '') {
-                    this.$Message.info('请输入公众号msgBiz');
-                } else {
-                    let data = {
-                        'title': self.title,
-                        'msgBiz': self.msgBiz
-                    };
-                    console.log(data);
-                    uAxios.post('profiles', data)
-                        .then(function (response) {
-                            console.log(response.data);
-                            if (response.data.code === 0) {
-                                self.$Message.info('添加成功');
-                                setTimeout(function () {
-                                    // location.reload();
-//                                    self.getlist('1')
-                                    self.title = ''
-                                    self.msgBiz = ''
-                                }, 500);
-                            } else {
-                                self.$Message.info(response.data.message);
-                            }
-                        });
-                }
-            },
-            ok () {
-                let self = this
-                console.log(self.id)
-                uAxios.delete('profiles/' + self.id ).then((response) => {
-                    if (response.data.code === 0) {
-                        this.$Message.info('删除成功');
-                        this.getlist(this.currentPage)
-                    } else {
-                        this.$Modal.error({
-                            content: response.data.message
-                        });
-                    }
-                });
-            },
-            cancel () {
-                console.log(this.value)
-                let self = this
-                let data = {
-                    title: this.value,
-                    msgBiz: this.msgBiz
-                }
-                uAxios.put('profiles/' + self.id, data).then((response) => {
-                    if (response.data.code === 0) {
-//	                	this.$Modal.error({
-//	                        content: '删除成功'
-//	                    });
-                        this.$Message.info('修改成功');
-                        this.getlist(this.currentPage)
-                    } else {
-                        this.$Modal.error({
-                            content: response.data.message
-                        });
-                    }
-                });
-            },
-            getTab (type) {
-                // 获得激活的Tab页
-                this.activeTab = type;
-            },
-            handlePage (num) {
-                // 分页
-                this.currentPage = num;
-                this.getlist(num);
-
-            },
+//            save() {
+////                this.$Message.info('未调接口...');
+//                let self = this;
+//                if (self.title === '') {
+//                    this.$Message.info('请输入公众号名称');
+//                    console.log(self.classificationList);
+//                } else if (self.msgBiz === '') {
+//                    this.$Message.info('请输入公众号msgBiz');
+//                } else {
+//                    let data = {
+//                        'title': self.title,
+//                        'msgBiz': self.msgBiz
+//                    };
+//                    console.log(data);
+//                    uAxios.post('profiles', data)
+//                        .then(function (response) {
+//                            console.log(response.data);
+//                            if (response.data.code === 0) {
+//                                self.$Message.info('添加成功');
+//                                setTimeout(function () {
+//                                    // location.reload();
+////                                    self.getlist('1')
+//                                    self.title = ''
+//                                    self.msgBiz = ''
+//                                }, 500);
+//                            } else {
+//                                self.$Message.info(response.data.message);
+//                            }
+//                        });
+//                }
+//            },
+//            ok () {
+//                let self = this
+//                console.log(self.id)
+//                uAxios.delete('profiles/' + self.id ).then((response) => {
+//                    if (response.data.code === 0) {
+//                        this.$Message.info('删除成功');
+//                        this.getlist(this.currentPage)
+//                    } else {
+//                        this.$Modal.error({
+//                            content: response.data.message
+//                        });
+//                    }
+//                });
+//            },
+//            cancel () {
+//                console.log(this.value)
+//                let self = this
+//                let data = {
+//                    title: this.value,
+//                    msgBiz: this.msgBiz
+//                }
+//                uAxios.put('profiles/' + self.id, data).then((response) => {
+//                    if (response.data.code === 0) {
+////	                	this.$Modal.error({
+////	                        content: '删除成功'
+////	                    });
+//                        this.$Message.info('修改成功');
+//                        this.getlist(this.currentPage)
+//                    } else {
+//                        this.$Modal.error({
+//                            content: response.data.message
+//                        });
+//                    }
+//                });
+//            },
+//            getTab (type) {
+//                // 获得激活的Tab页
+//                this.activeTab = type;
+//            },
             getlist (page) {
                 let self = this;
                 self.loading = true
-                uAxios.get('profiles?page=' + page )
+                uAxios.get('admin/complaints?page=' + page )
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)
@@ -263,19 +239,17 @@
 
                     });
             },
-            remove (index,_id) {
-                this.information.splice(index, 1);
-                console.log(_id)
-                uAxios.delete('profiles/' + _id)
-                    .then(res => {
-                        this.$Message.info('删除成功');
-                    });
+            handlePage (num) {
+                // 分页
+                this.currentPage = num;
+                this.getlist(num);
             },
             handleSearch () {
+                // 搜索
                 let query = '&keyword=' + this.searchKeyword;
                 let self = this;
                 let page = 1;
-                uAxios.get('profiles?page=' + page + query)
+                uAxios.get('admin/complaints?page=' + page + query)
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)
@@ -283,10 +257,18 @@
                         self.orgTotal = result.total;
                         self.searchKeyword = ''
                     });
+//            },
+//            remove (index,_id) {
+//                this.information.splice(index, 1);
+//                console.log(_id)
+//                uAxios.delete('profiles/' + _id)
+//                    .then(res => {
+//                        this.$Message.info('删除成功');
+//                    });
             }
         },
         mounted () {
-//            this.getlist('1')
+            this.getlist(1)
         }
     };
 </script>

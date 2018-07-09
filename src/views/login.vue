@@ -89,8 +89,9 @@
                                 localStorage.setItem('ACCESS_TOKEN', result.access_token);
                                 localStorage.setItem('mobile', self.form.mobile);
                                 Cookies.set('user', self.form.mobile);
+                                Cookies.set('name', result.name);
                                 self.$router.push({
-                                    path: '/page/index'
+                                    path: '/'
                                 });
                             } else {
                                 if (response.data.message === 'The given data was invalid.') {

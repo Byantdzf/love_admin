@@ -15,21 +15,31 @@
                     <Col span="11">
                     <Card >
                         <p slot="title">用户信息</p>
-                        <p class="order_box">
-                            <span class="font_16">头像：<img src="../../images/love.png" alt="" width="60rpx"></span>
-                        </p>
-                        <p class="order_box">
-                            <span>名字：angelabbay</span>
-                        </p>
-                        <p class="order_box">
-                            <span>手机号：angelabbay</span>
-                        </p>
+                        <div style="display: inline-block">
+                            <span class="font_16">头像：<img :src="avatar" alt="" width="80rpx"></span>
+                        </div>
+                        <div style="display: inline-block;margin-left: 12px;">
+                            <span class="font_16">用户名：</span>
+                            <span class="font_16">{{name}}</span>
+                        </div>
+                        <div style="display: inline-block;margin-left: 12px;">
+                            <span class="font_16">手机号：</span>
+                            <span class="font_16">{{mobile}}</span>
+                        </div>
                     </Card>
                     </Col>
                 </Row>
-                <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;margin-top: 26px;" border></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
+                <Row style="width: 100%;margin-top: 26px;">
+                    <Col span="24">
+                    <Card >
+                        <p slot="title">福分记录</p>
+                        <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>
+                        <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
+                              style="float:right;margin-top:5px;"></Page>
+                        <div style="clear: both"></div>
+                    </Card>
+                    </Col>
+                </Row>
                 </Col>
             </TabPane>
         </Tabs>
@@ -65,6 +75,9 @@
                 orgTotal: 0,
                 fieldList: [],
                 modelValue: '',
+                name: '',
+                mobile: '',
+                avatar: '',
                 industryList: [],
                 id: '',
                 addressList: [],
@@ -89,28 +102,35 @@
                     },
                     {
                         title: '商品名称',
-                        key: 'updatedAt',
+                        key: 'message',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '消费类型',
-                        key: 'updatedAt',
+                        key: 'type',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '消费金额',
-                        key: 'updatedAt',
+                        key: 'amount',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '消费时间',
-                        key: 'updatedAt',
+                        key: 'created_at',
+                        align: 'center',
+//                        width: 100,
+                        editable: true
+                    },
+                    {
+                        title: '剩余金额',
+                        key: 'value',
                         align: 'center',
 //                        width: 100,
                         editable: true
@@ -144,11 +164,7 @@
                 ],
                 modal: false,
                 value: '',
-                information: [
-                    {id: 250, updatedAt: '数据缺失'},
-                    {id: 256, updatedAt: '数据缺失'},
-                    {id: 257, updatedAt: '数据缺失'}
-                ],
+                information: [],
                 title:'',
                 msgBiz: '',
                 loading: false,
@@ -156,84 +172,6 @@
             };
         },
         methods: {
-            aaa (e){
-                console.log(e)
-                this.$router.push('/posts/index?msgBiz=' + e.msgBiz)
-                // this.$router.push({
-                //     name: '',
-                //     params: '/posts/index'
-                // });
-            },
-            save() {
-//                this.$Message.info('未调接口...');
-                let self = this;
-                if (self.title === '') {
-                    this.$Message.info('请输入公众号名称');
-                    console.log(self.classificationList);
-                } else if (self.msgBiz === '') {
-                    this.$Message.info('请输入公众号msgBiz');
-                } else {
-                    let data = {
-                        'title': self.title,
-                        'msgBiz': self.msgBiz
-                    };
-                    console.log(data);
-                    uAxios.post('profiles', data)
-                        .then(function (response) {
-                            console.log(response.data);
-                            if (response.data.code === 0) {
-                                self.$Message.info('添加成功');
-                                setTimeout(function () {
-                                    // location.reload();
-//                                    self.getlist('1')
-                                    self.title = ''
-                                    self.msgBiz = ''
-                                }, 500);
-                            } else {
-                                self.$Message.info(response.data.message);
-                            }
-                        });
-                }
-            },
-            ok () {
-                let self = this
-                console.log(self.id)
-                uAxios.delete('profiles/' + self.id ).then((response) => {
-                    if (response.data.code === 0) {
-                        this.$Message.info('删除成功');
-                        this.getlist(this.currentPage)
-                    } else {
-                        this.$Modal.error({
-                            content: response.data.message
-                        });
-                    }
-                });
-            },
-            cancel () {
-                console.log(this.value)
-                let self = this
-                let data = {
-                    title: this.value,
-                    msgBiz: this.msgBiz
-                }
-                uAxios.put('profiles/' + self.id, data).then((response) => {
-                    if (response.data.code === 0) {
-//	                	this.$Modal.error({
-//	                        content: '删除成功'
-//	                    });
-                        this.$Message.info('修改成功');
-                        this.getlist(this.currentPage)
-                    } else {
-                        this.$Modal.error({
-                            content: response.data.message
-                        });
-                    }
-                });
-            },
-            getTab (type) {
-                // 获得激活的Tab页
-                this.activeTab = type;
-            },
             handlePage (num) {
                 // 分页
                 this.currentPage = num;
@@ -242,8 +180,17 @@
             },
             getlist (page) {
                 let self = this;
+                console.log(self.id)
+                uAxios.get('admin/users/' + self.id + '?page=' + page )
+                    .then(res => {
+                        let result = res.data.data;
+                        console.log(result)
+                        self.name = result.name;
+                        self.avatar = result.avatar;
+                        self.mobile = result.mobile;
+                    });
                 self.loading = true
-                uAxios.get('profiles?page=' + page )
+                uAxios.get('admin/users/' + self.id + '/score/histories?page=' + page )
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)
@@ -254,30 +201,26 @@
 
                     });
             },
-            remove (index,_id) {
-                this.information.splice(index, 1);
-                console.log(_id)
-                uAxios.delete('profiles/' + _id)
-                    .then(res => {
-                        this.$Message.info('删除成功');
-                    });
-            },
             handleSearch () {
                 let query = '&keyword=' + this.searchKeyword;
                 let self = this;
                 let page = 1;
-                uAxios.get('profiles?page=' + page + query)
+                self.loading = true;
+                uAxios.get('admin/users/' + self.id + '/score/histories?page=' + page + query)
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)
                         self.information = result.data
                         self.orgTotal = result.total;
-                        self.searchKeyword = ''
+                        self.loading = false
+                        // self.searchKeyword = ''
+
                     });
             }
         },
         mounted () {
-//            this.getlist('1')
+            this.id = this.$route.params.user_integral_id;
+            this.getlist(1);
         }
     };
 </script>

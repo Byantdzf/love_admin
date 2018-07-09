@@ -294,38 +294,14 @@
                     });
             },
             createLabel () {
-                let self = this
                 console.log(this.searchKeyword);
-                let data = {
-                    title: this.searchKeyword
-                }
-                uAxios.post('labels', data)
-                    .then(res => {
-                        uAxios.get('labels')
-                            .then(res => {
-                                let result = res.data.data;
-                                self.labels = result.data;
-                                self.labels.forEach((item, index, arr) => {
-                                    arr[index].active = false;
-                                })
-                            });
-                    });
+                this.page = 1;
+                this.getlist(1);
             },
             filterLabel (page) {
                 console.log(this.social)
-                let self = this
-                let data = {
-                    sex: this.social
-                }
-                uAxios.post('admin/users?page=' + 1, data)
-                    .then(res => {
-                        debugger
-                        let result = res.data.data;
-                        self.orgData = result.data
-                        console.log(self.orgData)
-                        self.orgTotal = result.total;
-                        self.searchKeyword = ''
-                    });
+                this.page = 1;
+                this.getlist(1);
             },
 
 
@@ -375,12 +351,9 @@
 
             },
             getlist (page) {
-                let self = this,
-                    data = {
-                        sex: self.social
-                    }
+                let self = this
                 self.loading = true
-                uAxios.get('admin/users?page=' + page,data)
+                uAxios.get('admin/users?page=' + page + '&sex=' + self.social + '&keyword=' + self.searchKeyword)
                     .then(res => {
                         let result = res.data.data;
                       self.information = result.data.map((item)=>{

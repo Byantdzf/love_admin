@@ -7,32 +7,14 @@
 			</MenuItem>
 		</Menu>
 		<Row>
-			<!--<Col span="11" style="margin: 22px">-->
-			<!--<Card>-->
-			<!--<Form  :label-width="0">-->
-			<!--<FormItem style="border-bottom: 1px solid #d3d3d3;">-->
-			<!--<div class="order_box">-->
-			<!--<span class="font_16">头像：<img src="../../images/love.png" alt="" width="80rpx"></span>-->
-			<!--</div>-->
-			<!--<div class="order_box">-->
-			<!--<span>名字：angelabbay</span>-->
-			<!--</div>-->
-			<!--<div class="order_box">-->
-			<!--<span>手机号：angelabbay</span>-->
-			<!--</div>-->
-			<!--</FormItem>-->
-
-			<!--</Form>-->
-			<!--</Card>-->
-			<!--</Col>-->
 			<Col span="11" style="margin: 22px">
 			<Card>
 				<p slot="title" style="color: #ff6c4c">基本信息</p>
 				<div style="display: inline-block">
-					<span class="font_16">头像：<img :src="avatar" alt="" width="80rpx"></span>
+					<span class="font_16 _bold">头像：<img :src="avatar" alt="" width="80rpx" style="box-shadow: 1px 1px 12px #c1c1c1"></span>
 				</div>
-				<div style="display: inline-block;margin-left: 12px;">
-					<span class="font_16">用户名：</span>
+				<div style="display: inline-block;margin-left: 22px;">
+					<span class="font_16 _bold">用户名：</span>
 					<span class="font_16">{{name}}</span>
 				</div>
 				<Table :columns="columns" :data="information" :show-header="false" :border="false" style="margin-top: 26px"></Table>
@@ -45,49 +27,49 @@
 				<Card style="margin-top: 12px;">
 					<p slot="title">生活照</p>
 					<span v-for="(item,index) in photos" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx">
+						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
 					</span>
 				</Card>
 				<Card style="margin-top: 12px;">
 					<p slot="title">身份证</p>
 					<span v-for="(item,index) in identification_photos" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx">
+						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
 					</span>
 				</Card>
 				<Card style="margin-top: 12px;">
 					<p slot="title">毕业照</p>
 					<span v-for="(item,index) in graduate_photos" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx">
+						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
 					</span>
 				</Card>
 				<Card style="margin-top: 12px;">
 					<p slot="title">其他证件</p>
 					<span v-for="(item,index) in other_photos" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx">
+						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
 					</span>
 				</Card>
 				<Card style="margin-top: 12px;">
 					<p slot="title">二维码</p>
 					<span v-for="(item,index) in wechat_qrcode" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx">
+						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
 					</span>
 				</Card>
 				<Card style="margin-top: 12px;">
 					<p slot="title">测试结果</p>
 					<p style="border-bottom: 1px solid #d3d3d3;padding: 6px;display: inline-block;color: #00a050;font-weight: bold" >爱情语言</p>
-					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;" v-for="item in love_languages" @click="showModal(item)">
+					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;" v-for="item in love_languages" @click="showModal(item,'test')">
 						<span>{{item.title}}</span>
 						<Icon type="chevron-right" style="float: right;margin-top: 4px;margin-left: 22px;"></Icon>
 						<span style="float: right">{{item.num}}</span>
 					</div>
 					<p style="border-bottom: 1px solid #d3d3d3;padding: 6px;display: inline-block;color: #a03a17;font-weight: bold" >交往基因</p>
-					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;" v-for="item in love_characters" @click="showModal(item)">
+					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;" v-for="item in love_characters" @click="showModal(item,'test')">
 						<span>{{item.title}}</span>
 						<Icon type="chevron-right" style="float: right;margin-top: 4px;margin-left: 22px;"></Icon>
 						<span style="float: right">{{item.num}}</span>
 
 					</div>
-					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;">
+					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;" @click="showModal(character,'character')">
 						<span style="color: #ff1837;font-weight: bold" >我的优势</span>
 						<Icon type="chevron-right" style="float: right;margin-top: 4px;"></Icon>
 					</div>
@@ -99,10 +81,22 @@
 		</Row>
 		<Modal
 				v-model="modal"
-				:title="message.title"
+				:title="message.title_v"
 				ok-text="OK"
+
 				no-cancel>
-			<p>{{message.content}}</p>
+			<!--<p>{{message.type}}</p>-->
+			<div style="font-size: 16px">
+				<div v-if="message.type_v == 'test'">{{message.content}}</div>
+				<div style="text-align: center"   v-if="message.type_v == 'image'">
+					<img :src="message.image" style="width: 400px;"/>
+				</div>
+				<div v-if="message.type_v == 'character'">
+					<p style="font-weight: bold;margin: 4px;" ><span>类型:</span><p>{{character.type}}</p></p>
+					<p style="font-weight: bold;margin: 4px;" ><span>性格:</span><p>{{character.character}}</p></p>
+					<p style="font-weight: bold;margin: 4px;" ><span>推荐职位:</span><p v-for="item in character.profession">{{item}}</p></p>
+				</div>
+			</div>
 		</Modal>
 	</div>
 </template>
@@ -189,15 +183,30 @@
 				wechat_qrcode: [],
                 love_characters: [],
                 love_languages: [],
-                character: [],
+                character: {},
                 message: {},
                 uploaddata: []
             };
         },
         methods: {
-            showModal(item) {
-                this.modal = true;
-				this.message = item;
+            showModal(item, type) {
+                console.log(this.character)
+                if(type == 'test'){
+                    this.modal = true;
+                    this.message = item;
+                    this.message.type_v = 'test';
+                    this.message.title_v = item.title;
+				}else if(type == 'image'){
+                    this.modal = true;
+                    this.message.title_v = '预览';
+                    this.message.type_v = 'image';
+                    this.message.image = item;
+				}else{
+                    this.modal = true;
+                    this.message.title_v = '了解自己的优势';
+                    this.message.type_v = 'character';
+				}
+				console.log(this.message)
             },
 //            save () {
 //                let self = this;
@@ -420,5 +429,6 @@
     };
 </script>
 
-<style scoped>
+<style>
+	._bold{font-weight: bold}
 </style>

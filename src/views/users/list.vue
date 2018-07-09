@@ -110,7 +110,7 @@
                             return h('div', [
                                 h('Button', {
                                     props: {
-                                        type: 'primary',
+                                        type: 'error',
                                         size: 'small'
                                     },
                                     style: {
@@ -146,7 +146,7 @@
                                 }, '用户详情'),
                                 h('Button', {
                                     props: {
-                                        type: 'primary',
+                                        type: 'success',
                                         size: 'small'
                                     },
                                     style: {
@@ -164,7 +164,7 @@
                                 }, '福分记录'),
                                 h('Button', {
                                     props: {
-                                        type: 'primary',
+                                        type: 'info',
                                         size: 'small'
                                     },
                                     style: {
@@ -185,11 +185,7 @@
                     }
                 ],
                 value: '',
-                information: [
-                    {id: 250, updatedAt: '数据缺失'},
-                    {id: 256, updatedAt: '数据缺失'},
-                    {id: 257, updatedAt: '数据缺失'}
-                ],
+                information: [],
                 loading: false
             };
         },

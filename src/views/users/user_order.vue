@@ -16,14 +16,14 @@
                     <Card >
                         <p slot="title">用户信息</p>
                         <div style="display: inline-block">
-                            <span class="font_16">头像：<img :src="avatar" alt="" width="80rpx"></span>
+                            <span class="font_16 _bold">头像：<img :src="avatar" alt="" width="80rpx" style="box-shadow: 1px 1px 12px #c1c1c1"></span>
                         </div>
-                        <div style="display: inline-block;margin-left: 12px;">
-                            <span class="font_16">用户名：</span>
+                        <div style="display: inline-block;margin-left: 22px;">
+                            <span class="font_16 _bold">用户名：</span>
                             <span class="font_16">{{name}}</span>
                         </div>
                         <div style="display: inline-block;margin-left: 12px;">
-                            <span class="font_16">手机号：</span>
+                            <span class="font_1 _bold">手机号：</span>
                             <span class="font_16">{{mobile}}</span>
                         </div>
                     </Card>
@@ -43,19 +43,19 @@
                 </Col>
             </TabPane>
         </Tabs>
-        <Modal
-                v-model="modal1"
-                title="温馨提示"
-                @on-ok="ok"
-        >
-            <p>是否确定删除该公众号？</p>
-        </Modal>
-        <Modal
-                v-model="modal"
-                title="编辑公众号"
-                @on-ok="cancel"
-        >
-            <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>
+        <!--<Modal-->
+                <!--v-model="modal1"-->
+                <!--title="温馨提示"-->
+                <!--@on-ok="ok"-->
+        <!--&gt;-->
+            <!--<p>是否确定删除该公众号？</p>-->
+        <!--</Modal>-->
+        <!--<Modal-->
+                <!--v-model="modal"-->
+                <!--title="编辑公众号"-->
+                <!--@on-ok="cancel"-->
+        <!--&gt;-->
+            <!--<Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>-->
         </Modal>
     </div>
 </template>
@@ -258,10 +258,10 @@
 //                    }
 //                });
 //            },
-//            getTab (type) {
-//                // 获得激活的Tab页
-//                this.activeTab = type;
-//            },
+            getTab (type) {
+                // 获得激活的Tab页
+                this.activeTab = type;
+            },
             handlePage (num) {
                 // 分页
                 this.currentPage = num;

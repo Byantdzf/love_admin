@@ -17,20 +17,20 @@
                 </Col>
             </TabPane>
         </Tabs>
-        <Modal
-                v-model="modal1"
-                title="温馨提示"
-                @on-ok="ok"
-        >
-            <p>是否确定删除该公众号？</p>
-        </Modal>
-        <Modal
-                v-model="modal"
-                title="编辑公众号"
-                @on-ok="cancel"
-        >
-            <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>
-        </Modal>
+        <!--<Modal-->
+                <!--v-model="modal1"-->
+                <!--title="温馨提示"-->
+                <!--@on-ok="ok"-->
+        <!--&gt;-->
+            <!--<p>是否确定删除该公众号？</p>-->
+        <!--</Modal>-->
+        <!--<Modal-->
+                <!--v-model="modal"-->
+                <!--title="编辑公众号"-->
+                <!--@on-ok="cancel"-->
+        <!--&gt;-->
+            <!--<Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>-->
+        <!--</Modal>-->
     </div>
 </template>
 
@@ -221,10 +221,10 @@
 //                    }
 //                });
 //            },
-//            getTab (type) {
-//                // 获得激活的Tab页
-//                this.activeTab = type;
-//            },
+            getTab (type) {
+                // 获得激活的Tab页
+                this.activeTab = type;
+            },
             getlist (page) {
                 let self = this;
                 self.loading = true

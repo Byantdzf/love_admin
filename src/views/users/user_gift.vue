@@ -1,6 +1,6 @@
 <template>
     <div v-model="activeTab">
-        <Tabs @on-click="getTab">
+        <Tabs>
             <TabPane label="用户礼物列表"  name="complain">
                 <!--<Col span="24">-->
                 <Input
@@ -16,14 +16,14 @@
                         <Card >
                             <p slot="title">用户信息</p>
                             <div style="display: inline-block">
-                                <span class="font_16">头像：<img :src="avatar" alt="" width="80rpx"></span>
+                                <span class="font_16 _bold">头像：<img :src="avatar" alt="" width="80rpx" style="box-shadow: 1px 1px 12px #c1c1c1"></span>
                             </div>
-                            <div style="display: inline-block;margin-left: 12px;">
-                                <span class="font_16">用户名：</span>
+                            <div style="display: inline-block;margin-left: 22px;">
+                                <span class="font_16 _bold">用户名：</span>
                                 <span class="font_16">{{name}}</span>
                             </div>
                             <div style="display: inline-block;margin-left: 12px;">
-                                <span class="font_16">手机号：</span>
+                                <span class="font_1 _bold">手机号：</span>
                                 <span class="font_16">{{mobile}}</span>
                             </div>
                         </Card>
@@ -43,20 +43,6 @@
                 <!--</Col>-->
             </TabPane>
         </Tabs>
-        <Modal
-                v-model="modal1"
-                title="温馨提示"
-                @on-ok="ok"
-        >
-            <p>是否确定删除该公众号？</p>
-        </Modal>
-        <Modal
-                v-model="modal"
-                title="编辑公众号"
-                @on-ok="cancel"
-        >
-            <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>
-        </Modal>
     </div>
 </template>
 
@@ -82,16 +68,6 @@
                 id: '',
                 addressList: [],
                 modal1: false,
-                // label: (h) => {
-                //     return h('div', [
-                //         h('span', '标签一'),
-                //         h('Badge', {
-                //             props: {
-                //                 count: 3000
-                //             }
-                //         })
-                //     ])
-                // },
                 orgColumns: [
                     {
                         title: '序号',
@@ -207,88 +183,14 @@
                 ],
                 modal: false,
                 value: '',
-                information: [
-                    {id: 250, updatedAt: '数据缺失'},
-                    {id: 256, updatedAt: '数据缺失'},
-                    {id: 257, updatedAt: '数据缺失'}
-                ],
-                title:'',
+                information: [],
+                title: '',
                 msgBiz: '',
                 loading: false,
                 brokerLecturerData: []
             };
         },
         methods: {
-//            save() {
-////                this.$Message.info('未调接口...');
-//                let self = this;
-//                if (self.title === '') {
-//                    this.$Message.info('请输入公众号名称');
-//                    console.log(self.classificationList);
-//                } else if (self.msgBiz === '') {
-//                    this.$Message.info('请输入公众号msgBiz');
-//                } else {
-//                    let data = {
-//                        'title': self.title,
-//                        'msgBiz': self.msgBiz
-//                    };
-//                    console.log(data);
-//                    uAxios.post('profiles', data)
-//                        .then(function (response) {
-//                            console.log(response.data);
-//                            if (response.data.code === 0) {
-//                                self.$Message.info('添加成功');
-//                                setTimeout(function () {
-//                                    // location.reload();
-////                                    self.getlist('1')
-//                                    self.title = ''
-//                                    self.msgBiz = ''
-//                                }, 500);
-//                            } else {
-//                                self.$Message.info(response.data.message);
-//                            }
-//                        });
-//                }
-//            },
-//            ok () {
-//                let self = this
-//                console.log(self.id)
-//                uAxios.delete('profiles/' + self.id ).then((response) => {
-//                    if (response.data.code === 0) {
-//                        this.$Message.info('删除成功');
-//                        this.getlist(this.currentPage)
-//                    } else {
-//                        this.$Modal.error({
-//                            content: response.data.message
-//                        });
-//                    }
-//                });
-//            },
-//            cancel () {
-//                console.log(this.value)
-//                let self = this
-//                let data = {
-//                    title: this.value,
-//                    msgBiz: this.msgBiz
-//                }
-//                uAxios.put('profiles/' + self.id, data).then((response) => {
-//                    if (response.data.code === 0) {
-////	                	this.$Modal.error({
-////	                        content: '删除成功'
-////	                    });
-//                        this.$Message.info('修改成功');
-//                        this.getlist(this.currentPage)
-//                    } else {
-//                        this.$Modal.error({
-//                            content: response.data.message
-//                        });
-//                    }
-//                });
-//            },
-//            getTab (type) {
-//                // 获得激活的Tab页
-//                this.activeTab = type;
-//            },
             handlePage (num) {
                 // 分页
                 this.currentPage = num;

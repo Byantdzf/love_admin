@@ -15,7 +15,7 @@ fs.open('./env.js', 'w', function(err, fd) {
 module.exports = merge(webpackBaseConfig, {
     devtool: '#source-map',
     output: {
-        publicPath: '/dist/',
+        publicPath: 'http://localhost:8080/dist/',
         filename: '[name].js',
         chunkFilename: '[name].chunk.js'
     },

@@ -1,69 +1,33 @@
 <template>
     <div v-model="activeTab">
         <Tabs @on-click="getTab">
-            <TabPane label="文章标签" name="org">
+            <TabPane label='用户列表' name="org">
                 <Input
                         v-model="searchKeyword"
                         @on-enter="createLabel"
-                        placeholder="创建标签..."
+                        placeholder="搜索用户..."
                         style="width: 200px; margin-bottom: 22px;"/>
                 <span @click="createLabel" >
-                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">创建</Button>
+                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
                 </span>
                 <Card style="margin-bottom: 32px">
                     <p slot="title">
                         <Icon type="ionic"></Icon>
                         点击标签筛选
                     </p>
-                    <CheckboxGroup v-model="social" v-for="(item,index) in labels" @on-change="filterLabel" style="margin-bottom: 12px">
-                        <Button type="primary"  size="small" @click="editLabel(item._id,item.title)">修改</Button>
-                        <Button type="error"  size="small" @click="deleteLabel(item._id)">删除</Button>
-                        <Checkbox :label="item._id">
-                            <Icon type="ios-pricetags"></Icon>
-                            <span>{{item.title}}</span>
-                        </Checkbox>
-                    </CheckboxGroup>
+                    <RadioGroup v-model="social" v-for="(item,index) in labels" @on-change="filterLabel" style="margin-bottom: 12px;display: inline-block">
+                        <Radio  :label="index">
+                            <!--<Icon type="ios-pricetags"></Icon>-->
+                            <span>{{item}}</span>
+                        </Radio>
+                    </RadioGroup>
 
                 </Card>
-                <Table :loading="loading" :columns="orgColumns" :data="orgData" style="width: 100%;" border></Table>
+                <Table :loading="loading" :columns="Columns" :data="information" style="width: 100%;" border></Table>
                 <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
             </TabPane>
         </Tabs>
-        <Modal
-                v-model="modal1"
-                title="温馨提示"
-                @on-ok="ok"
-        >
-            <p>是否确定删除该标签？</p>
-        </Modal>
-         <Modal
-                v-model="modal2"
-                title="编辑标签"
-                @on-ok="cancel"
-        >
-            <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>
-        </Modal>
-        <Modal
-                v-model="modal"
-                title="编辑文章标签"
-                @on-ok="cancelOK"
-        >
-            <CheckboxGroup v-model="social1" v-for="(item,index) in labels">
-                <Checkbox :label="item._id" >
-                    <Icon type="ios-pricetags"></Icon>
-                    <span>{{item.title}}</span>
-                </Checkbox>
-            </CheckboxGroup>
-            <!--<Input-->
-                    <!--v-model="editlable"-->
-                    <!--@on-enter="createLabel"-->
-                    <!--placeholder="添加标签..."-->
-                    <!--style="width: 150px;height: 42px; margin-bottom: -12px;margin-top: 12px"/>-->
-            <!--<span @click="createLabel" >-->
-                    <!--<Button type="primary" style="margin-bottom: -14px;">添加</Button>-->
-                <!--</span>-->
-        </Modal>
     </div>
 </template>
 
@@ -78,26 +42,13 @@
         data () {
             return {
                 activeTab: 'org',
-                currentTab: 'org',
                 currentPage: 1,
                 searchKeyword: '',
                 orgTotal: 0,
-                brokerTotal: 0,
-                lecturerTotal: 0,
-                orgLecturerTotal: 0,
-                brokerLecturerTotal: 0,
-                fieldList: [],
-                modelValue: '',
-                industryList: [],
                 id: '',
-                addressList: [],
-                modal: false,
-                modal1: false,
-                modal2: false,
-                social: [],
-                social1:['5b11317d5360b92a60002151'],
-                labels: [],
-                orgColumns: [
+                social: '',
+                labels: ['男','女','全部'],
+                Columns: [
                     {
                         title: '序号',
                         type: 'index',
@@ -106,92 +57,54 @@
                         sortable: true
                     },
                     {
-                        title: '发布时间',
+                        title: '名称',
                         align: 'center',
-                        width: 100,
-                        key: 'createdAt',
-                        sortable: true
+                        key: 'updatedAt'
                     },
                     {
-                        title: '文章标题',
-                        key: 'title',
+                        title: '手机号',
                         align: 'center',
+                        key: 'updatedAt'
+                    },
+                    {
+                        title: '头像',
+                        key: 'updatedAt',
                         render: (h, params) => {
                             // debugger
                             return h('div', [
-                                h('Icon', {
-                                    props: {
-                                        type: "android-list"
-                                    },
-                                    style: {
-                                        fontSize: '14px'
-                                    }
-                                }),
-                                h('strong', {
-                                    style: {
-                                        margin: '5px',
-                                        fontSize: '14px'
-                                        // color: '#253fd3'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            console.log(params.row.link)
-                                            window.open(params.row.link)
-                                        }
-                                    }
-                                }, params.row.title)
-                            ]);
-                        }
-                    },
-                    {
-                        title: '阅读数',
-                        key: 'readNum',
-                        width: 100,
-                        align: 'center'
-                    },
-                    {
-                        title: '点赞数',
-                        key: 'likeNum',
-                        width: 100,
-                        align: 'center'
-                    },
-                    // {
-                    //     title: '更新时间',
-                    //     key: 'updatedAt',
-                    //     width: 100,
-                    //     align: 'center',
-                    //     sortable: true
-                    // },
-                    // {
-                    //     title: '时间间隔',
-                    //     key: 'time',
-                    //     align: 'center'
-                    // },
-                    {
-                        title: '公众号头像',
-                        key: 'profile_title',
-                        width: 200,
-                        render: (h, params) => {
-                            // debugger
-                            return h('div', [
-                                h('Avatar', {
-                                    props: {
-                                        src: params.row.profile.headimg,
-                                        size: 'large'
-                                    },
-                                    style: {
-                                        margin: '0 10px 0 0'
-                                    }
-                                }),
-                                h('strong', params.row.profile.title)
+//                                h('Avatar', {
+//                                    props: {
+//                                        src: params.row.profile.headimg,
+//                                        size: 'large'
+//                                    },
+//                                    style: {
+//                                        margin: '0 10px 0 0'
+//                                    }
+//                                }),
+//                                h('strong', params.row.profile.title)
                             ]);
                         },
                         align: 'center'
                     },
                     {
-                        title: '标签',
-                        key: 'show_more',
-                        width: 100,
+                        title: '用户类型',
+                        align: 'center',
+                        key: 'updatedAt'
+                    },
+                    {
+                        title: '性别',
+                        align: 'center',
+                        key: 'updatedAt'
+                    },
+                    {
+                        title: '加入时间',
+                        align: 'center',
+                        key: 'updatedAt'
+                    },
+
+                    {
+                        title: '操作',
+                        key: 'title',
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -200,93 +113,84 @@
                                         type: 'primary',
                                         size: 'small'
                                     },
+                                    style: {
+                                        margin: '5px'
+                                    },
                                     on: {
                                         click: () => {
-                                            this.id = params.row._id
-                                            console.log(params.row.post_label)
-                                            this.handleSelectAll2(params.row.post_label)
+                                            let argu = {user_order_id: params.row.id};
+                                            this.$router.push({
+                                                name: 'user_order',
+                                                params: argu
+                                            });
                                         }
                                     }
-                                }, '编辑标签'),
+                                }, '用户订单'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            let argu = {user_detail_id: params.row.id};
+                                            this.$router.push({
+                                                name: 'user_detail',
+                                                params: argu
+                                            });
+                                        }
+                                    }
+                                }, '用户详情'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            let argu = {user_integral_id: params.row.id};
+                                            this.$router.push({
+                                                name: 'user_integral',
+                                                params: argu
+                                            });
+                                        }
+                                    }
+                                }, '福分记录'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            let argu = {user_gift_id: params.row.id};
+                                            this.$router.push({
+                                                name: 'user_gift',
+                                                params: argu
+                                            });
+                                        }
+                                    }
+                                }, '礼物列表')
                             ]);
                         }
-//                  },
-//                  {
-//                      title: '操作',
-//                      key: 'title',
-//                      width: 140,
-//                      align: 'center',
-//                      render: (h, params) => {
-//                          return h('div', [
-//                              h('Button', {
-//                                  props: {
-//                                      type: 'primary',
-//                                      size: 'small'
-//                                  },
-//                                  style: {
-//                                      margin: '5px'
-//                                  },
-//                                  on: {
-//                                      click: () => {
-//                                      	console.log(params.row._id)
-//                                          this.postlabels_move(params.row._id,'up')
-//                                      }
-//                                  }
-//                              }, '上移'),
-//                              h('Button', {
-//                                  props: {
-//                                      type: 'primary',
-//                                      size: 'small'
-//                                  },
-//                                  style: {
-//                                      margin: '5px'
-//                                  },
-//                                  on: {
-//                                      click: () => {
-//                                          this.postlabels_move(params.row._id,'down')
-//                                      }
-//                                  }
-//                              }, '下移'),
-//                              h('Button', {
-//                                  props: {
-//                                      type: 'primary',
-//                                      size: 'small'
-//                                  },
-//                                  style: {
-//                                      margin: '5px'
-//                                  },
-//                                  on: {
-//                                      click: () => {
-//                                          this.postlabels_move(params.row._id,'start')
-//                                      }
-//                                  }
-//                              }, '置顶'),
-//                              h('Button', {
-//                                  props: {
-//                                      type: 'primary',
-//                                      size: 'small'
-//                                  },
-//                                  style: {
-//                                      margin: '5px'
-//                                  },
-//                                  on: {
-//                                      click: () => {
-//                                          this.postlabels_move(params.row._id,'end')
-//                                      }
-//                                  }
-//                              }, '置底')
-//                          ]);
-//                      }
                     }
                 ],
-                modal: false,
                 value: '',
-                orgData: [],
-                brokerData: [],
-                lecturerData: [],
-                orgLecturerData: [],
-                loading: false,
-                brokerLecturerData: []
+                information: [
+                    {id: 250, updatedAt: '数据缺失'},
+                    {id: 256, updatedAt: '数据缺失'},
+                    {id: 257, updatedAt: '数据缺失'}
+                ],
+                loading: false
             };
         },
         watch: {
@@ -370,12 +274,12 @@
                 }
             },
             postlabels_move (_id, type) {
-            	let self = this,
-            		data = {
-                		label_ids: self.social
-                	}
-                	console.log(data)
-                	
+                let self = this,
+                    data = {
+                        label_ids: self.social
+                    }
+                console.log(data)
+
                 uAxios.post('postlabels/' + _id + '/move/' + type,data)
                     .then(res => {
                         console.log(res.data.code)
@@ -384,8 +288,8 @@
                             self.getlist(this.currentPage)
                         }else{
                             self.$Modal.error({
-                            	content: res.data.message
-                        	});
+                                content: res.data.message
+                            });
                         }
                     });
             },
@@ -398,17 +302,17 @@
                 uAxios.post('labels', data)
                     .then(res => {
                         uAxios.get('labels')
-                        .then(res => {
-                            let result = res.data.data;
-                            self.labels = result.data;
-                            self.labels.forEach((item, index, arr) => {
-                                arr[index].active = false;
-                            })
-                        });
+                            .then(res => {
+                                let result = res.data.data;
+                                self.labels = result.data;
+                                self.labels.forEach((item, index, arr) => {
+                                    arr[index].active = false;
+                                })
+                            });
                     });
             },
             filterLabel (page) {
-              console.log(this.social)
+                console.log(this.social)
                 let self = this
                 let data = {
                     label_ids: this.social
@@ -471,9 +375,9 @@
             },
             getlist (page) {
                 let self = this,
-                	data = {
-                		label_ids: self.social
-                	}
+                    data = {
+                        label_ids: self.social
+                    }
                 self.loading = true
                 uAxios.get('labels/posts/v2?page=' + page,data)
                     .then(res => {
@@ -495,7 +399,7 @@
 //                             post_label: item.post.post_label
 //                          }
 //                      })
-						self.orgData = result.data
+                        self.orgData = result.data
                         console.log(self.orgData)
                         self.orgTotal = result.total
                         self.loading = false
@@ -525,7 +429,7 @@
             }
         },
         mounted () {
-            this.getlist(1)
+//            this.getlist(1)
 //          this.getOrgData(1, '');
 //          this.$store.commit('updateMenulist');
         }

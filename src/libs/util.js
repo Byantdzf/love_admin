@@ -4,10 +4,10 @@ import semver from 'semver';
 import packjson from '../../package.json';
 
 let util = {
-
+    title: ''
 };
 util.title = function (title) {
-    title = title || 'iView admin';
+    title = title || '福恋后台管理';
     window.document.title = title;
 };
 

@@ -1,7 +1,7 @@
 <template>
     <div v-model="activeTab">
         <Tabs @on-click="getTab">
-            <TabPane label="福分充值"  name="integral">
+            <TabPane label="福分充值"  name="score">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -16,7 +16,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="VIP充值"  name="payVIP">
+            <TabPane label="VIP充值"  name="rank">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -31,7 +31,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="兑换商品"  name="convert">
+            <TabPane label="兑换商品"  name="goods">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -88,7 +88,7 @@
         name: 'index',
         data () {
             return {
-                activeTab: 'integral',
+                activeTab: 'score',
                 currentPage: 1,
                 searchKeyword: '',
                 orgTotal: 0,
@@ -118,19 +118,19 @@
                     },
                     {
                         title: '用户名',
-                        key: 'updatedAt',
+                        key: 'user_name',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '头像',
-                        key: 'headimg',
+                        key: 'avatar',
                         render: (h, params) => {
                             return h('div', [
                                 h('Avatar', {
                                     props: {
-                                        src: params.row.headimg,
+                                        src: params.row.avatar,
                                         size: 'large'
                                     }
                                 })
@@ -141,21 +141,21 @@
                     },
                     {
                         title: '商品名称',
-                        key: 'updatedAt',
+                        key: 'goods',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '消费类型',
-                        key: 'updatedAt',
+                        key: 'type',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '消费时间',
-                        key: 'updatedAt',
+                        key: 'created_at',
                         align: 'center',
 //                        width: 100,
                         editable: true
@@ -263,9 +263,9 @@
                 }
                 uAxios.put('profiles/' + self.id, data).then((response) => {
                     if (response.data.code === 0) {
-//	                	this.$Modal.error({
-//	                        content: '删除成功'
-//	                    });
+//                      this.$Modal.error({
+//                          content: '删除成功'
+//                      });
                         this.$Message.info('修改成功');
                         this.getlist(this.currentPage)
                     } else {
@@ -278,6 +278,7 @@
             getTab (type) {
                 // 获得激活的Tab页
                 this.activeTab = type;
+                this.getlist(1)
             },
             handlePage (num) {
                 // 分页
@@ -288,11 +289,37 @@
             getlist (page) {
                 let self = this;
                 self.loading = true
-                uAxios.get('profiles?page=' + page )
+                uAxios.get('admin/orders?page=' + page + '&type=' + self.activeTab + '&keyword=' + self.searchKeyword)
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)
-                        self.information = result.data
+                        self.information = result.data.map((item)=>{
+                            var type = '';
+                            switch(item.type){
+                                case 'score':
+                                    type='福分充值';
+                                    break;
+                                case 'rank':
+                                    type='VIP充值';
+                                    break;
+                                case 'other_rank':
+                                    type='替人VIP充值';
+                                    break;
+                                case 'goods':
+                                    type='兑换商品';
+                                    break;
+                                default:
+                                    type='赠送礼物';
+                            }
+                            return {user_name: item.user_name,
+                                    avatar: item.avatar,
+                                    type: type,
+                                    goods: item.goods,
+                                    created_at: item.created_at,
+                                    id:item.id
+                                    }
+                        })
+                        console.log(self.information)
                         self.orgTotal = result.total;
                         self.loading = false
                         // self.searchKeyword = ''
@@ -311,7 +338,7 @@
                 let query = '&keyword=' + this.searchKeyword;
                 let self = this;
                 let page = 1;
-                uAxios.get('profiles?page=' + page + query)
+                uAxios.get('/admin/orders?page=' + page + query)
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)
@@ -322,7 +349,7 @@
             }
         },
         mounted () {
-//            this.getlist('1')
+            this.getlist('1')
         }
     };
 </script>

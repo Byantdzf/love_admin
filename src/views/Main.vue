@@ -32,7 +32,8 @@
                                     <DropdownItem name="loginout" divided>退出登录</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            <Avatar icon="person" style="background: #619fe7;margin-left:10px;"></Avatar>
+                            <Avatar v-if="avatar" :src="avatar" style="background: #619fe7;margin-left:10px;"></Avatar>
+                            <Avatar v-else src="https://i.loli.net/2017/08/21/599a521472424.jpg" style="background: #619fe7;margin-left:10px;"/>
                         </Row>
                     </div>
                 </div>
@@ -56,7 +57,8 @@ export default {
     data () {
         return {
             shrink: false,
-            userName: ''
+            userName: '',
+            avatar: ''
         };
     },
     computed: {
@@ -67,6 +69,7 @@ export default {
     methods: {
         init () {
             this.userName = Cookies.get('name');
+            this.avatar = Cookies.get('avatar');
         },
         toggleClick () {
             this.shrink = !this.shrink;

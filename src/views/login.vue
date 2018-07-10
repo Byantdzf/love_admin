@@ -89,6 +89,7 @@
                                 localStorage.setItem('ACCESS_TOKEN', result.access_token);
                                 localStorage.setItem('mobile', self.form.mobile);
                                 Cookies.set('user', self.form.mobile);
+                                Cookies.set('avatar', result.avatar);
                                 Cookies.set('name', result.name);
                                 self.$router.push({
                                     path: '/'

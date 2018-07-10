@@ -39,11 +39,11 @@ export const page500 = {
 
 // 作为Main组件的子页面展示但是不在左侧菜单显示的路由写在otherRouter里
 export const otherRouter = {
-    path: '/',
+    path: '/otherRouter',
     name: 'otherRouter',
     component: Main,
     children: [
-        { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: resolve => { require(['@/views/home/home.vue'], resolve); } },
+        // { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: resolve => { require(['@/views/home/home.vue'], resolve); } },
         {
             path: 'order/:order_id',
             name: 'order-detail',
@@ -131,10 +131,10 @@ export const appRouter = [
         path: '/',
         icon: 'ios-paper-outline',
         title: '订单列表',
-        name: 'index',
+        name: '',
         component: Main,
         children: [
-            { path: '/', title: '订单列表', name: '订单列表', component: resolve => { require(['@/views/orders/list.vue'], resolve); } }
+            { path: '/', title: '订单列表', name: 'list', component: resolve => { require(['@/views/orders/list.vue'], resolve); } }
         ]
     },
     {

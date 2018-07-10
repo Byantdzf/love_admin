@@ -15,7 +15,7 @@
                         <Icon type="ionic"></Icon>
                         点击标签筛选
                     </p>
-                    <RadioGroup v-model="social" v-for="(item,index) in labels" @on-change="filterLabel" style="margin-bottom: 12px;display: inline-block">
+                    <RadioGroup v-model="social" v-for="(item,index) in labels" :key="index" @on-change="filterLabel" style="margin-bottom: 12px;display: inline-block">
                         <Radio  :label="index">
                             <!--<Icon type="ios-pricetags"></Icon>-->
                             <span>{{item}}</span>
@@ -87,7 +87,8 @@
                     {
                         title: '用户类型',
                         align: 'center',
-                        key: 'type'
+                        key: 'type',
+                        width: 100
                     },
                     {
                         title: '性别',

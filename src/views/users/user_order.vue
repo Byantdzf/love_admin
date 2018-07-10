@@ -151,32 +151,31 @@
 //                        width: 100,
                         editable: true
                     },
-//                    {
-//                        title: '操作',
-//                        key: 'action',
-//                        width: 150,
-//                        align: 'center',
-//                        render: (h, params) => {
-//                            return h('div', [
-//                                h('Button', {
-//                                    props: {
-//                                        type: 'primary',
-//                                        size: 'small'
-//                                    },
-//                                    on: {
-//                                        click: () => {
-//                                            console.log(params.row.id)
-//                                            let argu = {order_id: params.row.id};
-//                                             this.$router.push({
-//                                                 name: 'order-detail',
-//                                                 params: argu
-//                                             });
-//                                        }
-//                                    }
-//                                }, '详情')
-//                            ]);
-//                        }
-//                    }
+                    {
+                        title: '操作',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            console.log(params.row.id)
+                                            let argu = {order_id: params.row.id};
+                                            this.$router.push({
+                                                name: 'order-detail',
+                                                params: argu
+                                            });
+                                        }
+                                    }
+                                }, '详情')
+                            ]);
+                        }
+                    }
                 ],
                 modal: false,
                 value: '',

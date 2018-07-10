@@ -112,7 +112,7 @@
                     {
                         title: '序号',
                         type: 'index',
-//                        width: 80,
+                        width: 80,
                         align: 'center',
                         sortable: true
                     },
@@ -169,8 +169,8 @@
                             return h('div', [
                                 h('Button', {
                                     props: {
-                                        type: 'primary',
-                                        size: 'small'
+                                        type: 'primary'
+//                                        size: 'small'
                                     },
                                     on: {
                                         click: () => {
@@ -189,11 +189,7 @@
                 ],
                 modal: false,
                 value: '',
-                information: [
-                    {id: 250, updatedAt: '数据缺失'},
-                    {id: 256, updatedAt: '数据缺失'},
-                    {id: 257, updatedAt: '数据缺失'}
-                ],
+                information: [],
                 title:'',
                 msgBiz: '',
                 loading: false,
@@ -201,14 +197,6 @@
             };
         },
         methods: {
-            aaa (e){
-                console.log(e)
-                this.$router.push('/posts/index?msgBiz=' + e.msgBiz)
-                // this.$router.push({
-                //     name: '',
-                //     params: '/posts/index'
-                // });
-            },
             save() {
 //                this.$Message.info('未调接口...');
                 let self = this;

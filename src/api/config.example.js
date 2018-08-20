@@ -1,7 +1,7 @@
 import QS from 'qs';
 
 export default {
-    baseURL: 'https://www.huosee.com/api/',
+    baseURL: 'http://love.hankin.com/api/',
     method: 'GET',
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

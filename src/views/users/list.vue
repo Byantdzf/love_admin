@@ -173,14 +173,14 @@
                                     },
                                     on: {
                                         click: () => {
-                                            let argu = {user_gift_id: params.row.id};
+                                            let argu = {user_mcircle_id: params.row.id};
                                             this.$router.push({
-                                                name: 'user_gift',
+                                                name: 'user_mcircle',
                                                 params: argu
                                             });
                                         }
                                     }
-                                }, '礼物列表')
+                                }, '用户企业')
                             ]);
                         }
                     }

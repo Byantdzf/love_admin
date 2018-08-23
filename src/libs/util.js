@@ -7,7 +7,7 @@ let util = {
     title: ''
 };
 util.title = function (title) {
-    title = title || '福恋后台管理';
+    title = title || '福邦商城管理';
     window.document.title = title;
 };
 

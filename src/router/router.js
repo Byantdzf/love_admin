@@ -45,6 +45,17 @@ export const otherRouter = {
     children: [
         // { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: resolve => { require(['@/views/home/home.vue'], resolve); } },
         {
+          path: 'goods/:goods_id',
+          name: 'goods-detail',
+          title: '商品详情',
+          meta: {
+            title: '商品详情'
+          },
+          component: resolve => {
+            require(['@/views/goods/detail.vue'], resolve);
+          }
+        },
+        {
             path: 'order/:order_id',
             name: 'order-detail',
             title: '订单详情',
@@ -54,6 +65,17 @@ export const otherRouter = {
             component: resolve => {
                 require(['@/views/orders/detail.vue'], resolve);
             }
+        },
+        {
+          path: 'mcircle/:mcircle_id',
+          name: 'mcircle-detail',
+          title: '企业详情',
+          meta: {
+            title: '企业详情'
+          },
+          component: resolve => {
+            require(['@/views/mcircle/detail.vue'], resolve);
+          }
         },
         {
             path: 'user_order/:user_order_id',
@@ -67,14 +89,14 @@ export const otherRouter = {
             }
         },
         {
-            path: 'user_gift/:user_gift_id',
-            name: 'user_gift',
-            title: '礼物列表',
+            path: 'user_mcircle/:user_mcircle_id',
+            name: 'user_mcircle',
+            title: '用户企业',
             meta: {
-                title: '礼物列表'
+                title: '用户企业'
             },
             component: resolve => {
-                require(['@/views/users/user_gift.vue'], resolve);
+                require(['@/views/users/user_mcircle.vue'], resolve);
             }
         },
         {
@@ -104,83 +126,80 @@ export const otherRouter = {
 
 // 作为Main组件的子页面展示并且在左侧菜单显示的路由写在appRouter里
 export const appRouter = [
-     // {
-     //     path: '/group',
-     //     icon: 'ios-folder',
-     //     name: 'group',
-     //     title: 'Group',
-     //     component: Main,
-     //     children: [
-     //         {
-     //             path: 'page1',
-     //             icon: 'ios-paper-outline',
-     //             name: 'page1',
-     //             title: 'Page1',
-     //             component: resolve => { require(['@/views/group/page1/page1.vue'], resolve); }
-     //         },
-     //         {
-     //             path: 'page2',
-     //             icon: 'ios-list-outline',
-     //             name: 'page2',
-     //             title: 'Page2',
-     //             component: resolve => { require(['@/views/group/page2/page2.vue'], resolve); }
-     //         }
-     //     ]
-     // },
-    {
+      // {
+      //   path: '/group',
+      //   icon: 'ios-folder',
+      //   name: '',
+      //   title: '首页',
+      //   component: Main,
+      //   children: [
+      //     {
+      //       path: 'page1',
+      //       icon: 'ios-paper-outline',
+      //       name: '',
+      //       title: 'Page1',
+      //       component: resolve => { require(['@/views/group/page1/page1.vue'], resolve) }
+      //     },
+      //     {
+      //       path: 'page2',
+      //       icon: 'ios-list-outline',
+      //       name: '',
+      //       title: 'Page2',
+      //       component: resolve => { require(['@/views/group/page2/page2.vue'], resolve) }
+      //     }
+      //   ]
+      // },
+      {
         path: '/',
         icon: 'ios-paper-outline',
-        title: '订单列表',
+        title: '首页配置',
         name: '',
         component: Main,
         children: [
-            { path: '/', title: '订单列表', name: 'list', component: resolve => { require(['@/views/orders/list.vue'], resolve); } }
+          {path: '/', title: '首页配置', name: 'home', component: resolve => { require(['@/views/home/index.vue'], resolve) }}
         ]
-    },
-    {
-        path: '/users',
-        icon: 'ios-people',
-        name: '用户管理',
-        title: '用户管理',
+      },
+      {
+        path: '/goodsList',
+        icon: 'ios-paper-outline',
+        title: '商品列表',
+        name: '商品列表',
         component: Main,
         children: [
-            {
-                path: 'list',
-                icon: 'ios-paper-outline',
-                name: '用户列表',
-                title: '用户列表',
-                component: resolve => { require(['@/views/users/list.vue'], resolve); }
-            },
-            {
-                path: 'complain',
-                icon: 'ios-list-outline',
-                name: '投诉列表',
-                title: '投诉列表',
-                component: resolve => { require(['@/views/users/complain.vue'], resolve); }
-            }
+          {path: '/goodsList', title: '商品列表', name: 'commodityList', component: resolve => { require(['@/views/goods/list.vue'], resolve) }}
         ]
-    }
-    // {
-    //     path: '/profiles',
-    //     icon: 'ios-chatboxes',
-    //     title: '公众号',
-    //     name: 'profiles',
-    //     component: Main,
-    //     children: [
-    //         { path: 'index', title: '公众号', name: '公众号', component: resolve => { require(['@/views/page/profiles.vue'], resolve); } }
-    //     ]
-    // },
-    // {
-    //     path: '/categories',
-    //     icon: 'pricetags',
-    //     title: 'categories',
-    //     name: 'categories',
-    //     component: Main,
-    //     children: [
-    //         { path: 'index', title: '标签', name: '标签', component: resolve => { require(['@/views/page/categories.vue'], resolve); } }
-    //     ]
-    // }
-];
+      },
+      {
+        path: '/order',
+        icon: 'ios-paper-outline',
+        title: '订单列表',
+        name: '订单列表',
+        component: Main,
+        children: [
+          {path: '/order', title: '订单列表', name: 'list', component: resolve => { require(['@/views/orders/list.vue'], resolve) }}
+        ]
+      },
+      {
+        path: '/mcircle',
+        icon: 'ios-paper-outline',
+        title: '企业列表',
+        name: '',
+        component: Main,
+        children: [
+          {path: '/mcircle', title: '企业列表', name: 'mcircle', component: resolve => { require(['@/views/mcircle/list.vue'], resolve) }}
+        ]
+      },
+      {
+        path: '/user',
+        icon: 'ios-paper-outline',
+        title: '用户列表',
+        name: '',
+        component: Main,
+        children: [
+          {path: '/user', title: '用户列表', name: 'userlist', component: resolve => { require(['@/views/users/list.vue'], resolve) }}
+        ]
+      }
+]
 
 // 所有上面定义的路由都要写在下面的routers里
 export const routers = [

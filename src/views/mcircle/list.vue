@@ -1,7 +1,7 @@
 <template>
     <div v-model="activeTab">
         <Tabs @on-click="getTab">
-            <TabPane label="全部"  name="score">
+            <TabPane label="待审核"  name="score">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -16,7 +16,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="未支付"  name="rank">
+            <TabPane label="已审核"  name="rank">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -31,7 +31,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="待发货"  name="goods">
+            <TabPane label="已拒绝"  name="goods">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -46,22 +46,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="已发货"  name="gift">
-                <Col span="24">
-                <Input
-                        v-model="searchKeyword"
-                        @on-enter="handleSearch"
-                        placeholder="关键字搜索..."
-                        style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
-                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
-                </span>
-                <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-                </Col>
-            </TabPane>
-            <TabPane label="已完成"  name="gift">
+            <TabPane label="首页推荐"  name="goods">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -113,6 +98,16 @@
                 id: '',
                 addressList: [],
                 modal1: false,
+                // label: (h) => {
+                //     return h('div', [
+                //         h('span', '标签一'),
+                //         h('Badge', {
+                //             props: {
+                //                 count: 3000
+                //             }
+                //         })
+                //     ])
+                // },
                 orgColumns: [
                     {
                         title: '序号',
@@ -121,22 +116,15 @@
                         align: 'center',
                         sortable: true
                     },
-                   {
-                     title: '订单号',
-                     key: 'user_name',
-                     align: 'center',
-//                        width: 100,
-                     editable: true
-                   },
                     {
-                        title: '用户名',
+                        title: '企业名称',
                         key: 'user_name',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
-                        title: '头像',
+                        title: '企业logo',
                         key: 'avatar',
                         render: (h, params) => {
                             return h('div', [
@@ -144,41 +132,74 @@
                                     props: {
                                         src: params.row.avatar,
                                         size: 'large'
+                                    },
+                                    style: {
+                                      margin: '12px'
                                     }
                                 })
                             ]);
                         },
-                        width: 80,
+                        width: 100,
                         align: 'center'
                     },
                     {
-                        title: '商品名称',
+                        title: '企业行业',
                         key: 'goods',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
-                        title: '状态',
+                        title: '企业负责人',
                         key: 'type',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
-                     title: '价格',
-                     key: 'type',
-                     align: 'center',
+                        title: '联系方式',
+                        key: 'type',
+                        align: 'center',
 //                        width: 100,
-                     editable: true
+                        editable: true
                     },
                     {
-                        title: '消费时间',
+                        title: '创建时间',
                         key: 'created_at',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
+                  {
+                    title: '首页推荐',
+                    key: 'action',
+                    width: 150,
+                    align: 'center',
+                    render: (h,params) => {
+                      return h('i-switch',{
+                        props: {
+                          size: 'large',
+                          value: false
+                        },
+                        style: {
+//                           marginRight: '5px'
+                        },
+                        on: {
+                          change: () =>{
+                            this.$Message.info('开关状态：' + status);
+                          }
+                        }
+                      }, [
+                        h('span', {
+                          slot: 'open'
+                        }, 'ON'),
+                        h('span', {
+                          slot: 'close'
+                        }, 'OFF')
+                      ])
+                    }
+
+                  },
                     {
                         title: '操作',
                         key: 'action',
@@ -194,9 +215,9 @@
                                     on: {
                                         click: () => {
                                             console.log(params.row.id)
-                                            let argu = {order_id: params.row.id};
+                                            let argu = {mcircle_id: params.row.id};
                                              this.$router.push({
-                                                 name: 'order-detail',
+                                                 name: 'mcircle-detail',
                                                  params: argu
                                              });
                                         }

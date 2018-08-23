@@ -1,7 +1,7 @@
 import QS from 'qs';
 
 export default {
-    baseURL: 'http://love.hankin.com/api/',
+    baseURL: 'http://mcircle.hankin.ufutx.cn/api/admin',
     method: 'GET',
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

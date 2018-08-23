@@ -246,7 +246,7 @@
             }
         },
         mounted () {
-            this.id = this.$route.params.user_gift_id;
+            this.id = this.$route.params.user_mcircle_id;
             this.getlist(1);
         }
     };

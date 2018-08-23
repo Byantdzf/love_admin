@@ -8,8 +8,8 @@
                 :shrink="shrink"
                 :menu-list="menuList">
                 <div slot="top" class="logo-con">
-                    <img v-show="!shrink"  src="../images/love.png" key="max-logo"  style="height: 86px !important;width: 90px;"/>
-                    <img v-show="shrink" src="../images/love.png" key="min-logo" />
+                    <img v-show="!shrink"  src="../images/logo.png" key="max-logo"  style="height: 86px !important;width: 90px;"/>
+                    <img v-show="shrink" src="../images/logo.png" key="min-logo" />
                 </div>
             </shrinkable-menu>
         </div>

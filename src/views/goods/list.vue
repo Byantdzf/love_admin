@@ -1,7 +1,7 @@
 <template>
     <div v-model="activeTab">
         <Tabs @on-click="getTab">
-            <TabPane label="全部"  name="score">
+            <TabPane label="商品列表"  name="score">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -16,52 +16,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="未支付"  name="rank">
-                <Col span="24">
-                <Input
-                        v-model="searchKeyword"
-                        @on-enter="handleSearch"
-                        placeholder="关键字搜索..."
-                        style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
-                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
-                </span>
-                <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-                </Col>
-            </TabPane>
-            <TabPane label="待发货"  name="goods">
-                <Col span="24">
-                <Input
-                        v-model="searchKeyword"
-                        @on-enter="handleSearch"
-                        placeholder="关键字搜索..."
-                        style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
-                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
-                </span>
-                <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-                </Col>
-            </TabPane>
-            <TabPane label="已发货"  name="gift">
-                <Col span="24">
-                <Input
-                        v-model="searchKeyword"
-                        @on-enter="handleSearch"
-                        placeholder="关键字搜索..."
-                        style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
-                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
-                </span>
-                <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-                </Col>
-            </TabPane>
-            <TabPane label="已完成"  name="gift">
+            <TabPane label="首页推荐"  name="score">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -81,15 +36,8 @@
                 v-model="modal1"
                 title="温馨提示"
                 @on-ok="ok"
-        >
-            <p>是否确定删除该公众号？</p>
-        </Modal>
-        <Modal
-                v-model="modal"
-                title="编辑公众号"
-                @on-ok="cancel"
-        >
-            <Input v-model="value" placeholder="Enter something..." style="width: 300px"></Input>
+                @on-cancel="cancel">
+            <p>是否确认删除该商品？</p>
         </Modal>
     </div>
 </template>
@@ -121,68 +69,94 @@
                         align: 'center',
                         sortable: true
                     },
-                   {
-                     title: '订单号',
-                     key: 'user_name',
-                     align: 'center',
-//                        width: 100,
-                     editable: true
-                   },
                     {
-                        title: '用户名',
-                        key: 'user_name',
-                        align: 'center',
-//                        width: 100,
-                        editable: true
-                    },
-                    {
-                        title: '头像',
+                        title: '商品图片',
                         key: 'avatar',
                         render: (h, params) => {
                             return h('div', [
-                                h('Avatar', {
-                                    props: {
-                                        src: params.row.avatar,
-                                        size: 'large'
-                                    }
-                                })
+                              h('img', {
+                                attrs: {
+                                  src: params.row.avatar
+                                },
+                                style: {
+                                  width: '42px',
+                                  margin: '12px'
+                                }
+                              }),
                             ]);
                         },
-                        width: 80,
+                        width: 120,
                         align: 'center'
                     },
-                    {
+                      {
                         title: '商品名称',
+                        key: 'user_name',
+                        align: 'center',
+    //                        width: 100,
+                        editable: true
+                      },
+                    {
+                        title: '普通价格',
                         key: 'goods',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
+                  {
+                    title: '福分价格',
+                    key: 'goods',
+                    align: 'center',
+//                        width: 100,
+                    editable: true
+                  },
                     {
-                        title: '状态',
+                        title: '已售件数',
                         key: 'type',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
-                     title: '价格',
-                     key: 'type',
-                     align: 'center',
-//                        width: 100,
-                     editable: true
-                    },
-                    {
-                        title: '消费时间',
+                        title: '上架时间',
                         key: 'created_at',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
+                  {
+                    title: '首页推荐',
+                    key: 'action',
+                    width: 180,
+                    align: 'center',
+                    render: (h,params) => {
+                      return h('i-switch',{
+                        props: {
+                           size: 'large',
+                           value: false
+                        },
+                        style: {
+//                           marginRight: '5px'
+                        },
+                        on: {
+                          change: () =>{
+                            this.$Message.info('开关状态：' + status);
+                          }
+                        }
+                      }, [
+                        h('span', {
+                          slot: 'open'
+                        }, 'ON'),
+                        h('span', {
+                          slot: 'close'
+                        }, 'OFF')
+                      ])
+                    }
+
+                  },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 180,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
@@ -191,17 +165,29 @@
                                         type: 'primary'
 //                                        size: 'small'
                                     },
+                                    style: {
+                                        margin: '12px'
+                                    },
                                     on: {
                                         click: () => {
-                                            console.log(params.row.id)
-                                            let argu = {order_id: params.row.id};
+                                            let argu = {goods_id: params.row.id};
                                              this.$router.push({
-                                                 name: 'order-detail',
+                                                 name: 'goods-detail',
                                                  params: argu
                                              });
                                         }
                                     }
-                                }, '详情')
+                                }, '详情'),
+                                  h('Button', {
+                                    props: {
+                                      type: 'error'
+                                    },
+                                    on: {
+                                      click: () => {
+                                        this.modal1 = true
+                                      }
+                                    }
+                                  }, '删除')
                             ]);
                         }
                     }
@@ -262,25 +248,7 @@
                 });
             },
             cancel () {
-                console.log(this.value)
-                let self = this
-                let data = {
-                    title: this.value,
-                    msgBiz: this.msgBiz
-                }
-                uAxios.put('profiles/' + self.id, data).then((response) => {
-                    if (response.data.code === 0) {
-//                      this.$Modal.error({
-//                          content: '删除成功'
-//                      });
-                        this.$Message.info('修改成功');
-                        this.getlist(this.currentPage)
-                    } else {
-                        this.$Modal.error({
-                            content: response.data.message
-                        });
-                    }
-                });
+              this.$Message.info('Clicked cancel');
             },
             getTab (type) {
                 // 获得激活的Tab页

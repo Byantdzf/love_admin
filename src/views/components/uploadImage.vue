@@ -40,6 +40,7 @@
   import config from '../../api/config';
   export default {
     name: 'uploadImage',
+    props:['pic'],
     data () {
       return {
         imgName: '',
@@ -52,6 +53,13 @@
         visible: false,
         filePath: ''
       };
+    },
+    watch:{
+      pic:function(){
+        if(!this.pic){
+          this.filePath = ''
+        }
+      }
     },
     methods: {
       // 预览
@@ -123,6 +131,7 @@
     },
     mounted () {
       this.getSignature()
+      this.filePath = this.pic
     }
   };
 </script>

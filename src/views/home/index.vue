@@ -34,7 +34,7 @@
     },
     data () {
       return {
-        addressGroup: '',
+        addressGroup: '深圳',
         cities: [],
         carousel: [], // 轮播图
         grid: [], // 推荐商品
@@ -45,7 +45,12 @@
     },
     watch:{
       addressGroup:function () {
-
+//        includes
+        this.cities.forEach((item) => {
+          if(JSON.stringify(item).includes(this.addressGroup)){
+            return this.updataCity(item.id);
+          }
+        });
       }
     },
     methods: {
@@ -57,7 +62,7 @@
           this.cities = result;
           this.addressGroup = this.cities[0].name;
           this.updataCity(this.cities[0].id);
-          console.log(this.cities);
+//          console.log(this.cities);
         });
       },
       // 获取城市数据

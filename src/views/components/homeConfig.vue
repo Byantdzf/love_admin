@@ -101,15 +101,24 @@
     },
     watch: {
       configData:function () {
-        console.log(this.configData)
+        this.formDynamic.items = []
         if (this.configData) {
+          if (this.title == '推荐企业'){
+            return this.configData.value.forEach((item) => {
+              this.formDynamic.items.push({
+                name: item.name,
+                link: item.link,
+                pic: item.logo
+              });
+            });
+          }
           this.configData.value.forEach((item) => {
             this.formDynamic.items.push({
               name: item.name,
               link: item.link,
               pic: item.pic
-            })
-          })
+            });
+          });
         }
       }
     },
@@ -117,23 +126,8 @@
       // 上传文件子组件传递
       uploadPictures (image) {
         this.formValidate.pic = image;
-        console.log(this.slideshow)
       },
       // 弹框
-      ok () {
-        let self = this
-        console.log(self.id)
-        uAxios.delete('profiles/' + self.id ).then((response) => {
-          if (response.data.code === 0) {
-            this.$Message.info('删除成功');
-            this.getlist(this.currentPage)
-          } else {
-            this.$Modal.error({
-              content: response.data.message
-            });
-          }
-        });
-      },
       cancel () {
         this.$Message.info('Clicked cancel');
       },
@@ -143,27 +137,44 @@
         if (!this.formValidate.link){return this.$Message.error('请填写链接!');}
         if (!this.formValidate.pic){return this.$Message.error('请上传图片!');}
         if(this.type == 'Edit') {
-          this.formDynamic.items[this.index] = {
-            name: this.formValidate.name,
-            link: this.formValidate.link,
-            pic: this.formValidate.pic
+          if (this.title == '推荐企业') {
+            this.formDynamic.items[this.index] = {
+              name: this.formValidate.name,
+              link: this.formValidate.link,
+              logo: this.formValidate.pic
+            };
+          } else {
+            this.formDynamic.items[this.index] = {
+              name: this.formValidate.name,
+              link: this.formValidate.link,
+              pic: this.formValidate.pic
+            };
           }
         }else{
-          this.formDynamic.items.push({
-            name: this.formValidate.name,
-            link: this.formValidate.link,
-            pic: this.formValidate.pic
-          });
-          console.log(this.formDynamic)
-          console.log(this.configData.id)
+          if (this.title == '推荐企业') {
+            this.formDynamic.items.push({
+              name: this.formValidate.name,
+              link: this.formValidate.link,
+              logo: this.formValidate.pic
+            });
+          } else {
+            this.formDynamic.items.push({
+              name: this.formValidate.name,
+              link: this.formValidate.link,
+              pic: this.formValidate.pic
+            });
+          }
         }
-         let data = {
-            value: this.formDynamic.items
-          };
-          console.log(data)
+        this.executeConfig();
+      },
+      executeConfig(){
+        let data = {
+          value: this.formDynamic.items
+        };
         uAxios.put(`home/configs/${this.configData.id}`, data).then((response) => {
           if (response.data.code === 0) {
             this.$Message.success('保存成功!');
+            this.showEdit = false;
             this.formValidate = {};
           } else {
             this.$Modal.error({
@@ -176,25 +187,32 @@
         this.showEdit = true;
         this.type = 'add';
       },
-      handleDelete () {
+      handleDelete (index) {
+        this.index = index;
         this.showModel = true;
       },
-      handleRemove (index) {
-        this.formDynamic.items.splice(index, 1);
-        console.log(this.formDynamic)
+      handleRemove () {
+        this.formDynamic.items.splice(this.index, 1);
+        this.executeConfig();
       },
       handleEdit (item, index) {
-        console.log(index);
         this.index = index;
         this.type = 'Edit';
         this.showEdit = true;
-        this.formValidate = {
-          name: item.name,
-          link: item.link ? item.link : '',
-          pic: item.pic,
-          goods_id: item.goods_id
+        if (this.title == '推荐企业') {
+          this.formValidate = {
+            name: item.name,
+            link: item.link ? item.link : '',
+            pic: item.logo
+          };
+        } else {
+          this.formValidate = {
+            name: item.name,
+            link: item.link ? item.link : '',
+            pic: item.pic
+          };
         }
-        console.log(this.formValidate)
+//        console.log(this.formValidate)
       }
     },
     mounted () {

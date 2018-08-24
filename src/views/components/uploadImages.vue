@@ -40,7 +40,8 @@
   import uAxios from '../../api';
   import config from '../../api/config';
   export default {
-    name: 'uploadImage',
+    name: 'uploadImages',
+    props:['pic'],
     data () {
       return {
         imgName: '',
@@ -53,6 +54,15 @@
         visible: false,
         filePath: []
       };
+    },
+    watch: {
+      pic: function () {
+        console.log(this.pic)
+        this.filePath = this.pic;
+        if (!this.pic) {
+          this.filePath = [];
+        }
+      }
     },
     methods: {
       // 预览

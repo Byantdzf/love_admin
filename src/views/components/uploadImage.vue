@@ -54,9 +54,10 @@
         filePath: ''
       };
     },
-    watch:{
-      pic:function(){
-        if(!this.pic){
+    watch: {
+      pic: function () {
+        this.filePath = this.pic
+        if (!this.pic) {
           this.filePath = ''
         }
       }
@@ -130,8 +131,8 @@
       },
     },
     mounted () {
-      this.getSignature()
-      this.filePath = this.pic
+      this.getSignature();
+      this.filePath = this.pic;
     }
   };
 </script>

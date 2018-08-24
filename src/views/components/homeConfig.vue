@@ -16,7 +16,7 @@
                             :prop="'items.' + index + '.value'">
                         <Row>
                             <Col span="12">
-                            <Input type="text" v-model="item.value" placeholder="测试标题..." readonly="readonly"></Input>
+                            <Input type="text" v-model="item.name" placeholder="测试标题..." readonly="readonly"></Input>
                             </Col>
                             <Col span="7" :offset="1">
                             <Button @click="handleEdit(item, index)" type="primary" size="small">编辑</Button>
@@ -71,7 +71,7 @@
   export default {
     name: 'homeConfig',
     components: {uploadImage},
-    props: ['configData', 'title', 'type'],
+    props: ['configData', 'title'],
     data () {
       return {
         slideshow: '',  // 上传轮播图
@@ -105,8 +105,8 @@
         if (this.configData) {
           this.configData.value.forEach((item) => {
             this.formDynamic.items.push({
-              value: item.name,
-              goods_id: item.goods_id,
+              name: item.name,
+              link: item.link,
               pic: item.pic
             })
           })
@@ -138,34 +138,33 @@
         this.$Message.info('Clicked cancel');
       },
       // 表单
-      handleSubmit (name) {
+      handleSubmit (type) {
         if (!this.formValidate.name){return this.$Message.error('请填写标题!');}
         if (!this.formValidate.link){return this.$Message.error('请填写链接!');}
         if (!this.formValidate.pic){return this.$Message.error('请上传图片!');}
-        if(this.formValidate.goods_id){
-          console.log(this.formDynamic.items[this.index].goods_id)
-          console.log(this.formValidate)
+        if(this.type == 'Edit') {
           this.formDynamic.items[this.index] = {
-            value: this.formValidate.name,
+            name: this.formValidate.name,
             link: this.formValidate.link,
             pic: this.formValidate.pic
           }
         }else{
           this.formDynamic.items.push({
-            value: this.formValidate.name,
+            name: this.formValidate.name,
             link: this.formValidate.link,
             pic: this.formValidate.pic
           });
           console.log(this.formDynamic)
           console.log(this.configData.id)
         }
-        let type = this.type,
-          data = {};
-          data[type] = this.formDynamic.items;
+         let data = {
+            value: this.formDynamic.items
+          };
+          console.log(data)
         uAxios.put(`home/configs/${this.configData.id}`, data).then((response) => {
           if (response.data.code === 0) {
             this.$Message.success('保存成功!');
-            this.formValidate = {}
+            this.formValidate = {};
           } else {
             this.$Modal.error({
               content: response.data.message
@@ -175,6 +174,7 @@
       },
       handleAdd () {
         this.showEdit = true;
+        this.type = 'add';
       },
       handleDelete () {
         this.showModel = true;
@@ -186,9 +186,10 @@
       handleEdit (item, index) {
         console.log(index);
         this.index = index;
+        this.type = 'Edit';
         this.showEdit = true;
         this.formValidate = {
-          name: item.value,
+          name: item.name,
           link: item.link ? item.link : '',
           pic: item.pic,
           goods_id: item.goods_id

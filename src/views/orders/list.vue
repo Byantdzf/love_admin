@@ -1,7 +1,7 @@
 <template>
     <div v-model="activeTab">
         <Tabs @on-click="getTab">
-            <TabPane label="全部"  name="score">
+            <TabPane label="全部"  name="ALL">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -16,7 +16,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="未支付"  name="rank">
+            <TabPane label="未支付"  name="UNPAID">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -31,7 +31,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="待发货"  name="goods">
+            <TabPane label="待发货"  name="PAID">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -46,7 +46,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="已发货"  name="gift">
+            <TabPane label="已发货"  name="SENT">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -61,7 +61,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="已完成"  name="gift">
+            <TabPane label="已完成"  name="SETTLED">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -103,9 +103,10 @@
         name: 'index',
         data () {
             return {
-                activeTab: 'score',
+                activeTab: 'ALL',
                 currentPage: 1,
                 searchKeyword: '',
+                status:'',
                 orgTotal: 0,
                 fieldList: [],
                 modelValue: '',
@@ -121,13 +122,6 @@
                         align: 'center',
                         sortable: true
                     },
-                   {
-                     title: '订单号',
-                     key: 'user_name',
-                     align: 'center',
-//                        width: 100,
-                     editable: true
-                   },
                     {
                         title: '用户名',
                         key: 'user_name',
@@ -153,21 +147,42 @@
                     },
                     {
                         title: '商品名称',
-                        key: 'goods',
+                        key: 'goods_name',
+                        align: 'center',
+//                        width: 100,
+                        editable: true
+                    },
+                    {
+                         title: '订单号',
+                         key: 'trade_no',
+                         align: 'center',
+//                        width: 100,
+                         editable: true
+                    },
+                    {
+                        title: '联系人',
+                        key: 'name',
+                        align: 'center',
+//                        width: 100,
+                        editable: true
+                    },
+                    {
+                        title: '联系电话',
+                        key: 'mobile',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '状态',
-                        key: 'type',
+                        key: 'pay_status',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                      title: '价格',
-                     key: 'type',
+                     key: 'goods_fee',
                      align: 'center',
 //                        width: 100,
                      editable: true
@@ -285,6 +300,7 @@
             getTab (type) {
                 // 获得激活的Tab页
                 this.activeTab = type;
+                console.log(type);
                 this.getlist(1)
             },
             handlePage (num) {
@@ -296,35 +312,24 @@
             getlist (page) {
                 let self = this;
                 self.loading = true
-                uAxios.get('admin/orders?page=' + page + '&type=' + self.activeTab + '&keyword=' + self.searchKeyword)
+                uAxios.get('orders?page=' + page  + '&keyword=' + self.searchKeyword + '&status=' + self.activeTab)
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)
                         self.information = result.data.map((item)=>{
-                            var type = '';
-                            switch(item.type){
-                                case 'score':
-                                    type='福分充值';
-                                    break;
-                                case 'rank':
-                                    type='VIP充值';
-                                    break;
-                                case 'other_rank':
-                                    type='替人VIP充值';
-                                    break;
-                                case 'goods':
-                                    type='兑换商品';
-                                    break;
-                                default:
-                                    type='赠送礼物';
-                            }
                             return {user_name: item.user_name,
-                                    avatar: item.avatar,
-                                    type: type,
-                                    goods: item.goods,
-                                    created_at: item.created_at,
-                                    id:item.id
-                                    }
+                                trade_no: item.trade_no,
+                                user_name: item.user_name,
+                                goods_name: item.goods_name,
+                                pay_status: item.pay_status,
+                                goods_fee: item.goods_fee,
+                                avatar: item.avatar,
+                                goods: item.goods,
+                                created_at: item.created_at,
+                                name:item.name,
+                                mobile:item.mobile,
+                                id:item.id
+                                }
                         })
                         console.log(self.information)
                         self.orgTotal = result.total;
@@ -342,10 +347,10 @@
                     });
             },
             handleSearch () {
-                let query = '&keyword=' + this.searchKeyword;
+                let query = '&keyword=' + this.searchKeyword + '&status=' + this.activeTab;
                 let self = this;
                 let page = 1;
-                uAxios.get('/admin/orders?page=' + page + query)
+                uAxios.get('/orders?page=' + page + query)
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)

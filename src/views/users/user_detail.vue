@@ -7,97 +7,55 @@
 			</MenuItem>
 		</Menu>
 		<Row>
-			<Col span="11" style="margin: 22px">
+			<Col span="22" style="margin: 22px">
 			<Card>
-				<p slot="title" style="color: #ff6c4c">基本信息</p>
-				<div style="display: inline-block">
-					<span class="font_16 _bold">头像：<img :src="avatar" alt="" width="80rpx" style="box-shadow: 1px 1px 12px #c1c1c1"></span>
-				</div>
-				<div style="display: inline-block;margin-left: 22px;">
-					<span class="font_16 _bold">用户名：</span>
-					<span class="font_16">{{name}}</span>
-				</div>
-				<Table :columns="columns" :data="information" :show-header="false" :border="false" style="margin-top: 26px"></Table>
-			</Card>
-			</Col>
-			<Col span="11" style="margin: 22px">
-			<Card>
-				<p slot="title" style="color: #ff6c4c">VIP信息</p>
-				<Table :columns="columns1" :data="VIPinformation" :show-header="false" :border="false" style="margin-top: 26px"></Table>
-				<Card style="margin-top: 12px;">
-					<p slot="title">生活照</p>
-					<span v-for="(item,index) in photos" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
-					</span>
-				</Card>
-				<Card style="margin-top: 12px;">
-					<p slot="title">身份证</p>
-					<span v-for="(item,index) in identification_photos" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
-					</span>
-				</Card>
-				<Card style="margin-top: 12px;">
-					<p slot="title">毕业照</p>
-					<span v-for="(item,index) in graduate_photos" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
-					</span>
-				</Card>
-				<Card style="margin-top: 12px;">
-					<p slot="title">其他证件</p>
-					<span v-for="(item,index) in other_photos" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
-					</span>
-				</Card>
-				<Card style="margin-top: 12px;">
-					<p slot="title">二维码</p>
-					<span v-for="(item,index) in wechat_qrcode" style="margin: 0 10px;">
-						<img :src="item" alt="" width="80rpx" @click="showModal(item,'image')">
-					</span>
-				</Card>
-				<Card style="margin-top: 12px;">
-					<p slot="title">测试结果</p>
-					<p style="border-bottom: 1px solid #d3d3d3;padding: 6px;display: inline-block;color: #00a050;font-weight: bold" >爱情语言</p>
-					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;" v-for="item in love_languages" @click="showModal(item,'test')">
-						<span>{{item.title}}</span>
-						<Icon type="chevron-right" style="float: right;margin-top: 4px;margin-left: 22px;"></Icon>
-						<span style="float: right">{{item.num}}</span>
-					</div>
-					<p style="border-bottom: 1px solid #d3d3d3;padding: 6px;display: inline-block;color: #a03a17;font-weight: bold" >交往基因</p>
-					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;" v-for="item in love_characters" @click="showModal(item,'test')">
-						<span>{{item.title}}</span>
-						<Icon type="chevron-right" style="float: right;margin-top: 4px;margin-left: 22px;"></Icon>
-						<span style="float: right">{{item.num}}</span>
-
-					</div>
-					<div style="border-bottom: 1px solid #d3d3d3;padding: 6px;padding-right: 22px;" @click="showModal(character,'character')">
-						<span style="color: #ff1837;font-weight: bold" >我的优势</span>
-						<Icon type="chevron-right" style="float: right;margin-top: 4px;"></Icon>
-					</div>
-
-				</Card>
-
+				<Form ref="formValidate" :model="formValidate" :label-width="80">
+					<FormItem label="用户头像" prop="image">
+                        <Card>
+                        <img :src="formValidate.avatar" alt="">
+                        </Card>
+					</FormItem>
+					<FormItem label="用户名" prop="name">
+						<Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+					</FormItem>
+					<FormItem label="联系方式" prop="link">
+						<Row>
+							<Col span="5">
+							<Input v-model="formValidate.mobile" placeholder="Enter your order_num"></Input>
+							</Col>
+						</Row>
+					</FormItem>
+					<FormItem label="剩余积分" prop="name">
+						<Row>
+							<Col span="5" style="margin-right: 12px">
+							 <Input v-model="formValidate.remain_amount"   placeholder="Enter your stock"></Input>
+							</Col>
+                            <Col span="5">
+                            <Button type="warning" @click="gotoIntegral">福分记录</Button>
+                            </Col>
+						</Row>
+					</FormItem>
+                    <FormItem label="名下企业" prop="name">
+                        <dropdown :dropData="enterprises" v-on:getGropData="getGropData" :id="enterprises_id"></dropdown>
+                    </FormItem>
+				</Form>
+                <Card>
+                    <p slot="title">用户订单</p>
+                    <Input
+                            v-model="searchKeyword"
+                            @on-enter="handleSearch"
+                            placeholder="搜索用户..."
+                            style="width: 200px; margin-bottom: 22px;"/>
+                    <span @click="handleSearch" >
+                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
+                </span>
+                    <Table :loading="loading" :columns="Columns" :data="orderList" style="width: 100%;" border></Table>
+                    <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
+                          style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
+                </Card>
 			</Card>
 			</Col>
 		</Row>
-		<Modal
-				v-model="modal"
-				:title="message.title_v"
-				ok-text="OK"
-
-				no-cancel>
-			<!--<p>{{message.type}}</p>-->
-			<div style="font-size: 16px">
-				<div v-if="message.type_v == 'test'">{{message.content}}</div>
-				<div style="text-align: center"   v-if="message.type_v == 'image'">
-					<img :src="message.image" style="width: 400px;"/>
-				</div>
-				<div v-if="message.type_v == 'character'">
-					<p style="font-weight: bold;margin: 4px;" ><span>类型:</span><p>{{character.type}}</p></p>
-					<p style="font-weight: bold;margin: 4px;" ><span>性格:</span><p>{{character.character}}</p></p>
-					<p style="font-weight: bold;margin: 4px;" ><span>推荐职位:</span><p v-for="item in character.profession">{{item}}</p></p>
-				</div>
-			</div>
-		</Modal>
 	</div>
 </template>
 
@@ -105,6 +63,8 @@
     import axios from 'axios';
     import uAxios from '../../api';
     import config from '../../api/config';
+    import dropdown from '../components/dropdown';
+
     //  import md5 from 'js-md5';
     //	import moment from 'moment';
 
@@ -112,319 +72,179 @@
         name: 'Org',
         data () {
             return {
-                articlesId: '',
-                columns: [
-                    {
-                        title: 'Name',
-                        key: 'name'
-                    },
-                    {
-                        title: 'Age',
-                        key: 'key'
-                    }
-                ],
-                columns1: [
-                    {
-                        title: 'Name',
-                        key: 'title'
-                    },
-                    {
-                        title: 'Age',
-                        key: 'key'
-                    }
-                ],
-                information: [],
-                VIPinformation: [],
-                searchKeyword: '',
-                activeTab: 'orgInfo',
-                orgColumns: [
-                    {
-                        key: 'updatedAt',
-                        width: '150px',
-                        align: 'right'
-                    },
-                    {
-                        key: 'value',
-                        align: 'left',
-                        render: (h, params) => {
-                            if (params.row.key === 'LOGO') {
-                                return h('div', [
-                                    h('Avatar', {
-                                        props: {
-                                            src: params.row.value,
-                                            shape: 'square'
-                                        },
-                                        style: {
-                                            width: '50px',
-                                            height: '50px',
-                                            margin: '10px 0'
-                                        }
-                                    })
-                                ]);
-                            } else {
-                                return h('div', [
-                                    h('span', params.row.value)
-                                ]);
-                            }
+              id: '',
+              orgTotal: 0,        // 分页
+              searchKeyword: '',  // 订单搜索
+              formValidate: {},   // 数据赋值
+              enterprises: [],    // 企业列表
+              enterprises_id: '', // 默认企业id
+              orderList: [],      //  用户订单
+              loading: false,
+              currentPage: 1,
+              Columns: [
+                {
+                  title: '序号',
+                  type: 'index',
+                  width: 80,
+                  align: 'center',
+                  sortable: true
+                },
+                {
+                  title: '头像',
+                  key: 'updatedAt',
+                  render: (h, params) => {
+                    return h('div', [
+                      h('Avatar', {
+                        props: {
+                          src: params.row.avatar,
+                          size: 'large'
+                        },
+                        style: {
+                          margin: '0 10px 0 0'
                         }
-                    }
-                ],
-                orgData: [],
-                total: 0,
-                orgTotal: 0,
-                modal: false,
-                name: '',
-                mobile: '',
-                avatar: '',
-                photos: [],
-				graduate_photos: [],
-				other_photos: [],
-				identification_photos: [],
-				wechat_qrcode: [],
-                love_characters: [],
-                love_languages: [],
-                character: {},
-                message: {},
-                uploaddata: []
+                      }),
+                      //                                h('strong', params.row.profile.title)
+                    ]);
+                  },
+                  align: 'center'
+                },
+                {
+                  title: '名称',
+                  align: 'center',
+                  key: 'name'
+                },
+                {
+                  title: '手机号',
+                  align: 'center',
+                  key: 'mobile'
+                },
+                {
+                  title: '加入时间',
+                  align: 'center',
+                  width: 100,
+                  key: 'created_at'
+                },
+
+                {
+                  title: '操作',
+                  key: 'title',
+                  align: 'center',
+                  render: (h, params) => {
+                    return h('div', [
+                      h('Button', {
+                        props: {
+                          type: 'primary'
+//                                        size: 'small'
+                        },
+                        style: {
+                          margin: '12px'
+                        },
+                        on: {
+                          click: () => {
+                            let argu = {user_detail_id: params.row.id};
+                            this.$router.push({
+                              name: 'user_detail',
+                              params: argu
+                            });
+                          }
+                        }
+                      }, '详情')
+                    ]);
+                  }
+                }
+              ]
             };
         },
+      components: {
+        dropdown: dropdown
+      },
         methods: {
-            showModal(item, type) {
-                console.log(this.character)
-                if(type == 'test'){
-                    this.modal = true;
-                    this.message = item;
-                    this.message.type_v = 'test';
-                    this.message.title_v = item.title;
-				}else if(type == 'image'){
-                    this.modal = true;
-                    this.message.title_v = '预览';
-                    this.message.type_v = 'image';
-                    this.message.image = item;
-				}else{
-                    this.modal = true;
-                    this.message.title_v = '了解自己的优势';
-                    this.message.type_v = 'character';
-				}
-				console.log(this.message)
-            },
-//            save () {
-//                let self = this;
-//                let data = {
-//                    'file': self.filePath,
-//                    'category_id': self.articlesId
-//                };
-//                uAxios.post('import/articles',data).then(res => {
-//                    let result = res.data.data
-//                    if(res.data.code == 1) {
-//
-//                    }
-//                });
-//            },
-//            upload () {
-//                var self = this;
-//                self.loadingStatus = true;
-//                var formData = new FormData();
-////              var fileName = md5(self.file.name) + '.' + self.file.type.split('/').pop().toLowerCase();
-//                var fileName = self.file.name;
-//                var filePath = self.host + '/' + self.ossConfig.dir + fileName;
-//                formData.append('name', self.ossConfig.dir + fileName);
-//                formData.append('key', self.ossConfig.dir + fileName);
-//                formData.append('policy', self.ossConfig.policy);
-//                formData.append('OSSAccessKeyId', self.ossConfig.accessid);
-//                formData.append('success_action_status', '200');
-//                formData.append('signature', self.ossConfig.signature);
-//                formData.append('file', self.file);
-//                formData.append('filename', self.file.name);
-//                console.log(formData);
-//                console.log(self.ossConfig.host)
-//                axios.post(self.ossConfig.host, formData, {headers: {'Content-Type': 'multipart/form-data'}}
-//                ).then(function (response) {
-//                    if (response.status === 200) {
-////                        console.log(filePath);
-//                        self.filePath = filePath;
-//                        self.$Notice.success({
-//                            title: '文件上传成功',
-//                            desc: '文件 ' + self.file.name + ' 上传成功。'
-//                        });
-//                        self.file = null;
-//                        self.save()
-//                    } else {
-//                        self.$Modal.error({
-//                            content: response.statusText
-//                        });
-//                    }
-//                });
-//                self.loadingStatus = false;
-//            },
-//            handleFormatError (file) {
-//                this.$Notice.warning({
-//                    title: '文件格式不正确',
-//                    desc: '文件 ' + file.name + ' 格式不正确，请选择图片文件。'
-//                });
-//            },
-//            handleBeforeUpload (file) {
-//                // console.log(file);
-//                this.file = file;
-//                this.imgName = file.name;
-//                return false;
-//            },
-//            getData (id,page) {
-//                // 获取机构资料
-//                const self = this;
-//                uAxios.get('categories/' + id + '/articles?page=' + page).then(res => {
-//                    let result = res.data.data;
-//                    self.orgData = result.data;
-//                    self.orgTotal = result.total;
-//                });
-//            },
-//            handlePage (num) {
-//                let query = num + '&keyword=' + this.searchKeyword;
-//                this.getData(this.articlesId, query);
-//            },
-//            handleSearch () {
-//                // 处理搜索
-//                let query = '1&keyword=' + this.searchKeyword;
-//                this.getData(this.articlesId, query);
-//            },
-//            getSignature () {
-//                const self = this;
-//                uAxios.get('upload/signature').then(res => {
-//                    let result = res.data.data;
-//                    self.ossConfig = result;
-//                    self.host = result.host;
-//                });
-//            }
+          gotoIntegral () {
+            let argu = {user_integral_id: this.id};
+            this.$router.push({
+              name: 'user_integral',
+              params: argu
+            });
+          },
+          getGropData (_id) {
+            this.formValidate.enterprise_id = _id; // 企业
+            let argu = {user_mcircle_id: _id};
+            this.$router.push({
+              name: 'user_mcircle',
+              params: argu
+            });
+          },
+          // 获取数据
             getlist (page) {
                 let self = this;
                 self.loading = true
-                uAxios.get('admin/users/' + self.id + '?page=' + page )
+                uAxios.get('users/' + self.id + '?page=' + page )
                     .then(res => {
+                      if (res.data.code === 0) {
                         let result = res.data.data;
-                        console.log(result)
-                        self.name = result.name;
-                        self.avatar = result.avatar;
-                        self.mobile = result.mobile;
-                        self.love_characters = result.love_characters;
-                        self.love_languages = result.love_languages;
-                        self.character = result.character;
-                        self.photos = result.profile.photos
-                        self.graduate_photos = result.profile.graduate_photos
-                        self.other_photos = result.profile.other_photos
-                        self.identification_photos = result.profile.identification_photos
-                        self.wechat_qrcode = result.profile.wechat_qrcode
-                        self.information = [
-                            {
-								name: '手机号',
-								key: result.mobile
-							},
-                            {
-                                name: '类型',
-                                key: result.type == 'single' ? '单身' : '介绍人'
-                            },
-
-                            {
-                                name: '性别',
-                                key: result.sex == '1' ? '男' : '女'
-                            },
-                            {
-                                name: '出生日期',
-                                key: result.profile.birthday
-                            },
-                            {
-                                name: '单身状态',
-                                key: result.profile.state
-                            },
-                            {
-                                name: '身高',
-                                key: result.profile.stature + 'cm'
-                            },
-                            {
-                                name: '体重',
-                                key: result.profile.weight + 'cm'
-                            },
-                            {
-                                name: '常住地',
-                                key: result.profile.city
-                            },
-                            {
-                                name: '户口类型',
-                                key: result.profile.resident_type
-                            },
-                            {
-                                name: '成长地',
-                                key: result.profile.resident_city
-                            },
-                            {
-                                name: '学历',
-                                key: result.profile.degree
-                            },
-                            {
-                                name: '毕业学校',
-                                key: result.profile.graduate_school
-                            },
-                            {
-                                name: '工作单位',
-                                key: result.profile.company
-                            },
-                            {
-                                name: '单位性质',
-                                key: result.profile.work_sort
-                            },
-                            {
-                                name: '行业',
-                                key: result.industry + '~' + result.industry_sub
-                            },
-                            {
-                                name: '加入时间',
-                                key: result.profile.created_at
-                            },
-                            {
-                                name: '推荐人',
-                                key: result.from_user_name
-                            },
-                            {
-                                name: 'VIP等级',
-                                key: result.rank_name
-                            },
-                            {
-                                name: '个人简介',
-                                key: result.profile.introduction
-                            },
-                            {
-                                name: '理想对象',
-                                key: result.profile.ideal_mate
-                            }
-
-                        ]
-                        self.VIPinformation = [
-                            {
-                                title: '薪资',
-                                key: result.profile.salary
-                            },
-                            {
-                                title: '购车情况',
-                                key: result.profile.h_car == 1 ? '有' : '无'
-                            },
-
-                            {
-                                title: '购房情况',
-                                key: result.profile.h_housing == 1 ? '有' : '无'
-                            }
-                        ]
-                        self.orgTotal = result.total;
+                        self.formValidate = {
+                            name: result.name,
+                            avatar: result.wechat.avatar,
+                            created_at: result.created_at,
+                            mobile: result.mobile,
+                            id: result.id,
+                            remain_amount: result.score.remain_amount
+                        };
+                        console.log(self.formValidate)
                         self.loading = false;
-                        // self.searchKeyword = ''
-
+                      }else {
+                        alert('数据出错了！');
+                      }
                     });
             },
+          // 用户企业
+          getEnterprises () {
+            let self = this;
+            self.loading = true;
+            uAxios.get(`users/${self.id}/enterprises?nopage=1`)
+              .then(res => {
+                if (res.data.code === 0) {
+                  let result = res.data.data;
+                  self.enterprises = result;
+                  self.enterprises_id = self.enterprises[0].id;
+                  self.loading = false;
+                }else {
+                  alert('数据出错了！');
+                }
+              });
+          },
+          // 用户订单
+          getOrder (page) {
+            let self = this;
+            self.loading = true;
+            uAxios.get(`users/${self.id}/orders?page=${page}&keyword=${self.searchKeyword}`)
+              .then(res => {
+                if (res.data.code === 0) {
+                  let result = res.data.data;
+                  self.orderList = result.data;
+                  console.log(self.orderList);
+                  self.orgTotal = result.total;
+                  self.loading = false;
+                }else {
+                  alert('数据出错了！');
+                }
+              });
+          },
+          // 搜索
+          handleSearch () {
+            this.getlist(1);
+          },
+          // 分页
+          handlePage (num) {
+            this.currentPage = num;
+            this.getlist(num);
+          }
         },
         mounted () {
             this.id = this.$route.params.user_detail_id;
+            this.getEnterprises();
+            this.getOrder();
             this.getlist(1);
-//            this.articlesId = this.$route.params.articles_id;
-//            this.getData(this.articlesId, 1);
-//            this.getSignature()
         }
     };
 </script>

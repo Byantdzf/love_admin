@@ -1,7 +1,7 @@
 <template>
     <div v-model="activeTab">
         <Tabs @on-click="getTab">
-            <TabPane label="待审核"  name="score">
+            <TabPane label="待审核"  name="0">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -16,7 +16,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="已审核"  name="rank">
+            <TabPane label="已审核"  name="1">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -31,22 +31,7 @@
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
                 </Col>
             </TabPane>
-            <TabPane label="已拒绝"  name="goods">
-                <Col span="24">
-                <Input
-                        v-model="searchKeyword"
-                        @on-enter="handleSearch"
-                        placeholder="关键字搜索..."
-                        style="width: 200px; margin-bottom: 22px;"/>
-                <span @click="handleSearch" >
-                    <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
-                </span>
-                <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>
-                <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                      style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
-                </Col>
-            </TabPane>
-            <TabPane label="首页推荐"  name="goods">
+            <TabPane label="已拒绝"  name="-1">
                 <Col span="24">
                 <Input
                         v-model="searchKeyword"
@@ -88,7 +73,7 @@
         name: 'index',
         data () {
             return {
-                activeTab: 'score',
+                activeTab: '0',
                 currentPage: 1,
                 searchKeyword: '',
                 orgTotal: 0,
@@ -118,19 +103,19 @@
                     },
                     {
                         title: '企业名称',
-                        key: 'user_name',
+                        key: 'name',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '企业logo',
-                        key: 'avatar',
+                        key: 'logo',
                         render: (h, params) => {
                             return h('div', [
                                 h('Avatar', {
                                     props: {
-                                        src: params.row.avatar,
+                                        src: params.row.logo,
                                         size: 'large'
                                     },
                                     style: {
@@ -144,21 +129,21 @@
                     },
                     {
                         title: '企业行业',
-                        key: 'goods',
+                        key: 'industry_name',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '企业负责人',
-                        key: 'type',
+                        key: 'user_name',
                         align: 'center',
 //                        width: 100,
                         editable: true
                     },
                     {
                         title: '联系方式',
-                        key: 'type',
+                        key: 'mobile',
                         align: 'center',
 //                        width: 100,
                         editable: true
@@ -170,36 +155,6 @@
 //                        width: 100,
                         editable: true
                     },
-                  {
-                    title: '首页推荐',
-                    key: 'action',
-                    width: 150,
-                    align: 'center',
-                    render: (h,params) => {
-                      return h('i-switch',{
-                        props: {
-                          size: 'large',
-                          value: false
-                        },
-                        style: {
-//                           marginRight: '5px'
-                        },
-                        on: {
-                          change: () =>{
-                            this.$Message.info('开关状态：' + status);
-                          }
-                        }
-                      }, [
-                        h('span', {
-                          slot: 'open'
-                        }, 'ON'),
-                        h('span', {
-                          slot: 'close'
-                        }, 'OFF')
-                      ])
-                    }
-
-                  },
                     {
                         title: '操作',
                         key: 'action',
@@ -316,45 +271,19 @@
             },
             getlist (page) {
                 let self = this;
-                self.loading = true
-                uAxios.get('admin/orders?page=' + page + '&type=' + self.activeTab + '&keyword=' + self.searchKeyword)
+                self.loading = true;
+                uAxios.get('enterprises?page=' + page + '&status=' + self.activeTab + '&keyword=' + self.searchKeyword)
                     .then(res => {
                         let result = res.data.data;
-                        console.log(result)
                         self.information = result.data.map((item)=>{
-                            var type = '';
-                            switch(item.type){
-                                case 'score':
-                                    type='福分充值';
-                                    break;
-                                case 'rank':
-                                    type='VIP充值';
-                                    break;
-                                case 'other_rank':
-                                    type='替人VIP充值';
-                                    break;
-                                case 'goods':
-                                    type='兑换商品';
-                                    break;
-                                default:
-                                    type='赠送礼物';
-                            }
-                            return {user_name: item.user_name,
-                                    avatar: item.avatar,
-                                    type: type,
-                                    goods: item.goods,
-                                    created_at: item.created_at,
-                                    id:item.id
-                                    }
-                        })
-                        console.log(self.information)
+                            return item;
+                        });
                         self.orgTotal = result.total;
-                        self.loading = false
+                        self.loading = false;
                         // self.searchKeyword = ''
-
                     });
             },
-            remove (index,_id) {
+            remove (index, _id) {
                 this.information.splice(index, 1);
                 console.log(_id)
                 uAxios.delete('profiles/' + _id)
@@ -363,17 +292,7 @@
                     });
             },
             handleSearch () {
-                let query = '&keyword=' + this.searchKeyword;
-                let self = this;
-                let page = 1;
-                uAxios.get('/admin/orders?page=' + page + query)
-                    .then(res => {
-                        let result = res.data.data;
-                        console.log(result)
-                        self.information = result.data
-                        self.orgTotal = result.total;
-                        self.searchKeyword = ''
-                    });
+              this.getlist(1);
             }
         },
         mounted () {

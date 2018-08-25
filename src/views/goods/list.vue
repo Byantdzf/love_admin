@@ -11,6 +11,7 @@
                 <span @click="handleSearch" >
                     <Button type="primary" icon="search" style=" margin-bottom: 22px;">搜索</Button>
                 </span>
+                <Button type="primary" style=" margin-bottom: 22px;float: right" @click="addGoods">+ 新建商品</Button>
                 <Table :loading="loading" :columns="orgColumns" :data="information" style="width: 100%;" border></Table>
                 <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
                       style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
@@ -181,6 +182,13 @@
             handlePage (num) {
                 this.currentPage = num;
                 this.getlist(num);
+            },
+            addGoods () {
+              let argu = {goods_id: 0};
+              this.$router.push({
+                name: 'goods-detail',
+                params: argu
+              });
             },
             getlist (page) {
                 let self = this;

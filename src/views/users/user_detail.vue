@@ -51,7 +51,7 @@
                 </span>
                     <Table :loading="loading" :columns="Columns" :data="orderList" style="width: 100%;" border></Table>
                     <Page :total="orgTotal" @on-change="handlePage" :page-size="15"
-                          style="float:right;margin-top:5px;margin-bottom:30px;"></Page>
+                          style="margin-top:5px;text-align: right"></Page>
                 </Card>
 			</Card>
 			</Col>
@@ -90,6 +90,11 @@
                   sortable: true
                 },
                 {
+                  title: '用户名',
+                  align: 'center',
+                  key: 'user_name'
+                },
+                {
                   title: '头像',
                   key: 'updatedAt',
                   render: (h, params) => {
@@ -109,7 +114,17 @@
                   align: 'center'
                 },
                 {
-                  title: '名称',
+                  title: '商品名称',
+                  align: 'center',
+                  key: 'goods_name'
+                },
+                {
+                  title: '订单号',
+                  align: 'center',
+                  key: 'trade_no'
+                },
+                {
+                  title: '收货联系人',
                   align: 'center',
                   key: 'name'
                 },
@@ -117,6 +132,16 @@
                   title: '手机号',
                   align: 'center',
                   key: 'mobile'
+                },
+                {
+                  title: '状态',
+                  align: 'center',
+                  key: 'pay_status'
+                },
+                {
+                  title: '价格',
+                  align: 'center',
+                  key: 'goods_fee'
                 },
                 {
                   title: '加入时间',
@@ -141,9 +166,9 @@
                         },
                         on: {
                           click: () => {
-                            let argu = {user_detail_id: params.row.id};
+                            let argu = {order_id: params.row.id};
                             this.$router.push({
-                              name: 'user_detail',
+                              name: 'order-detail',
                               params: argu
                             });
                           }
@@ -243,7 +268,7 @@
         mounted () {
             this.id = this.$route.params.user_detail_id;
             this.getEnterprises();
-            this.getOrder();
+            this.getOrder(1);
             this.getlist(1);
         }
     };

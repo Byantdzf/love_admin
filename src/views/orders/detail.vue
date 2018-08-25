@@ -12,7 +12,7 @@
                 <p slot="title">订单信息</p>
                 <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                     <FormItem label="商品图片" prop="name" >
-                        <img src="goods_pic" width="60px" alt="">
+                        <img :src="goods_pic" width="60px" alt="">
                     </FormItem>
                     <FormItem label="订单号" prop="trade_no">
                         <Input v-model="formValidate.trade_no" placeholder=""></Input>
@@ -65,7 +65,7 @@
                 <p slot="title">买家信息</p>
                 <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
                     <FormItem label="买家头像" prop="name" >
-                        <img src="formValidate.avatar" width="60px" alt="">
+                        <img :src="formValidate.avatar" width="60px" alt="">
                     </FormItem>
                     <FormItem label="买家名称" prop="name">
                         <Row>
@@ -101,10 +101,14 @@
                         <!--<Button type="primary" @click="handleSubmit('formValidate')">保存</Button>-->
                     </FormItem>
                 </Form>
-                <Button type="primary" style="margin-left: 22%" @click="sentOrder()">发快递</Button>
+                <Button type="primary" style="margin-left: 22%" @click="sentOrder()" v-if="formValidate.status == 'PAID'">发快递</Button>
             </Card>
             </Col>
         </Row>
+        <div style="text-align: center">
+            <Button type="primary" style="margin-left: 22%" @click="removeOrder()" v-if="formValidate.status == 'UNPAID'">关闭订单</Button>
+            <Button type="primary"  @click="signOrder()" v-if="formValidate.status == 'SENT'">签收订单</Button>
+        </div>
     </div>
 </template>
 
@@ -198,16 +202,48 @@
                     }
                   });
           },
-          sentOrder (tracking_num) {
+          // 发货
+          sentOrder () {
               let self = this;
               self.loading = true;
-              uAxios.put(`orders/${self.id}/send?tracking_num=`+tracking_num)
+            if (self.formValidate.tracking_num == null) {
+              return this.$Message.error('请输入订单号')
+            }
+              uAxios.put(`orders/${self.id}/send?tracking_num=${self.formValidate.tracking_num}`)
               .then(res => {
                 if (res.data.code === 0) {
                   this.$Message.success('发送成功!');
                   this.getData();
                 }else {
-                  alert('res.data.message');
+                  this.$Message.error(res.data.message);
+                }
+              });
+          },
+          // 关闭订单
+          removeOrder () {
+            let self = this;
+            self.loading = true;
+            uAxios.put(`orders/${self.id}/cancel`)
+              .then(res => {
+                if (res.data.code === 0) {
+                  this.$Message.success('成功关闭订单!');
+                  this.getData();
+                }else {
+                  this.$Message.error(res.data.message);
+                }
+              });
+          },
+          // 签收订单
+          signOrder () {
+            let self = this;
+            self.loading = true;
+            uAxios.put(`orders/${self.id}/signed`)
+              .then(res => {
+                if (res.data.code === 0) {
+                  this.$Message.success('成功签收订单!');
+                  this.getData();
+                }else {
+                  this.$Message.error(res.data.message);
                 }
               });
           }

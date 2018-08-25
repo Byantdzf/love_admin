@@ -181,16 +181,15 @@
             getlist (page) {
                 let self = this;
                 console.log(self.id)
-                uAxios.get('admin/users/' + self.id + '?page=' + page )
+                uAxios.get(`users/${self.id}`)
                     .then(res => {
                         let result = res.data.data;
-                        console.log(result)
                         self.name = result.name;
-                        self.avatar = result.avatar;
+                        self.avatar = result.wechat.avatar;
                         self.mobile = result.mobile;
                     });
                 self.loading = true
-                uAxios.get('admin/users/' + self.id + '/score/histories?page=' + page )
+                uAxios.get('users/' + self.id + '/score/histories?page=' + page )
                     .then(res => {
                         let result = res.data.data;
                         console.log(result)
